@@ -2,7 +2,7 @@
 
 #-  qm.gemspec ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 30 May 2013
+#                                                   ~~ last updated 16 Jul 2013
 
 Gem::Specification.new do |spec|
 
@@ -24,11 +24,13 @@ Gem::Specification.new do |spec|
 
     spec.homepage = 'https://www.qmachine.org'
 
+    spec.license = 'Apache 2.0'
+
     spec.name = 'qm'
 
     spec.summary = %q{The World's Most Relaxed Supercomputer}
 
-    spec.version = '1.0.0'
+    spec.version = '1.0.1'
 
 end
 
