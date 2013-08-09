@@ -1,9 +1,6 @@
-README
-======
+# QMachine [![Gem Version](https://badge.fury.io/rb/qm.png)](http://badge.fury.io/rb/qm) [![Dependency Status](https://gemnasium.com/qmachine/qm-ruby.png)](https://gemnasium.com/qmachine/qm-ruby)
 
 This repository contains the `qm` Ruby gem. It is *very* incomplete!
-
-[![Gem Version](https://badge.fury.io/rb/qm.png)](http://badge.fury.io/rb/qm)
 
 Install
 -------
