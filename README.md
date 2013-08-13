@@ -1,12 +1,13 @@
 # qm [![Gem Version](https://badge.fury.io/rb/qm.png)](http://badge.fury.io/rb/qm) [![Dependency Status](https://gemnasium.com/qmachine/qm-ruby.png)](https://gemnasium.com/qmachine/qm-ruby)
 
-The `qm` Ruby gem will eventually implement both the API server and web server
-of [QMachine](https://www.qmachine.org), but currently is is *very* incomplete.
+The `qm` gem for [Ruby](http://www.ruby-lang.org/) will implement both the API
+server and the web server components of [QMachine](https://www.qmachine.org)
+(QM), but currently is is *very* incomplete.
 
 Install
 -------
 
-To install the most recent release, run
+To install the latest release, run
 
     gem install qm
 
