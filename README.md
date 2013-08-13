@@ -2,7 +2,7 @@
 
 The `qm` gem for [Ruby](http://www.ruby-lang.org/) will implement both the API
 server and the web server components of [QMachine](https://www.qmachine.org)
-(QM), but currently is is *very* incomplete.
+(QM), but currently it is *very* incomplete.
 
 Install
 -------
