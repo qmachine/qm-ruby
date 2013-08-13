@@ -1,6 +1,7 @@
-# QMachine [![Gem Version](https://badge.fury.io/rb/qm.png)](http://badge.fury.io/rb/qm) [![Dependency Status](https://gemnasium.com/qmachine/qm-ruby.png)](https://gemnasium.com/qmachine/qm-ruby)
+# qm [![Gem Version](https://badge.fury.io/rb/qm.png)](http://badge.fury.io/rb/qm) [![Dependency Status](https://gemnasium.com/qmachine/qm-ruby.png)](https://gemnasium.com/qmachine/qm-ruby)
 
-This repository contains the `qm` Ruby gem. It is *very* incomplete!
+The `qm` Ruby gem will eventually implement both the API server and web server
+of [QMachine](https://www.qmachine.org), but currently is is *very* incomplete.
 
 Install
 -------
