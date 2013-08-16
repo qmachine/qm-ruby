@@ -2,7 +2,7 @@
 
 #-  qm.gemspec ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 16 Jul 2013
+#                                                   ~~ last updated 16 Aug 2013
 
 Gem::Specification.new do |spec|
 
@@ -15,6 +15,7 @@ Gem::Specification.new do |spec|
     spec.email = 'sean@mathbiol.org'
 
     spec.extra_rdoc_files = [
+        'LICENSE',
         'README.md'
     ]
 
