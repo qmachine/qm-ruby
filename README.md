@@ -11,3 +11,4 @@ To install the latest release, run
 
     gem install qm
 
+<!-- vim:set syntax=markdown: -->
