@@ -2,7 +2,7 @@
 
 #-  qm.gemspec ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 30 Apr 2014
+#                                                   ~~ last updated 13 May 2014
 
 Gem::Specification.new do |spec|
 
@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
 
     spec.summary = %q{A platform for World Wide Computing}
 
-    spec.version = '1.1.8'
+    spec.version = '1.1.9'
 
 end
 
