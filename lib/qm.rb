@@ -2,7 +2,7 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 13 Jul 2014
+#                                                   ~~ last updated 14 Jul 2014
 
 module QM
 
@@ -21,15 +21,14 @@ module QM
 
     def self::launch_client()
       # This function needs documentation.
-        puts '(placeholder: `launch_client`)';
-        return;
+        puts '(placeholder: `launch_client`)'
+        return
     end
 
     def self::launch_service(*obj)
       # This function needs documentation.
         require 'api-server.rb'
-        #puts '(placeholder: `launch_service`)';
-        return;
+        return QMachineService.run!
     end
 
 end

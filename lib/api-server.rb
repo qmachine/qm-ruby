@@ -29,7 +29,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 13 Jul 2014
+#                                                   ~~ last updated 14 Jul 2014
 
 require 'json'
 require 'sinatra'
@@ -51,12 +51,12 @@ class QMachineService < Sinatra::Base
             port:                   ENV['PORT'] || 8177,
             public_folder:          'public'
 
-     # Sinatra mappings and options needed by QMachine -- leave these alone ;-)
+      # Sinatra mappings and options needed by QMachine -- leave these alone ;-)
 
         mime_type webapp: 'application/x-web-app-manifest+json'
         set bind: :hostname, run: false, static: :enable_web_server
 
-     # See also: http://www.sinatrarb.com/configuration.html
+      # See also: http://www.sinatrarb.com/configuration.html
 
     end
 
@@ -192,7 +192,5 @@ class QMachineService < Sinatra::Base
     end
 
 end
-
-QMachineService.run!
 
 #-  vim:set syntax=ruby:
