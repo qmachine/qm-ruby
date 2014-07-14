@@ -2,7 +2,7 @@
 
 #-  qm.gemspec ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 01 Jul 2014
+#                                                   ~~ last updated 13 Jul 2014
 
 Gem::Specification.new do |spec|
 
@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
     spec.date = Time.now
 
-    spec.description = 'This is a *very incomplete* port of QMachine.'
+    spec.description = 'This is an incomplete port of the QMachine web service.'
 
     spec.email = 'sean@mathbiol.org'
 
@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
     ]
 
     spec.files = [
+        'lib/api-server.rb',
         'lib/qm.rb'
     ]
 
@@ -27,11 +28,23 @@ Gem::Specification.new do |spec|
 
     spec.license = 'Apache 2.0'
 
+    spec.metadata = {
+        'issue_tracker' => 'https://github.com/qmachine/qm-ruby/issues'
+    }
+
     spec.name = 'qm'
 
     spec.summary = %q{A platform for World Wide Computing}
 
     spec.version = '1.1.10'
+
+  # Specify dependencies
+
+    spec.add_runtime_dependency('json', '1.8.1')
+    spec.add_runtime_dependency('sinatra', '1.4.5')
+    spec.add_runtime_dependency('sinatra-cross_origin', '0.3.2')
+    spec.add_runtime_dependency('sqlite3', '1.3.9')
+    spec.add_runtime_dependency('thin', '1.6.2')
 
 end
 
