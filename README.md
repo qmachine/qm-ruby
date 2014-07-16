@@ -11,7 +11,7 @@ Install
 
 To install the latest release, run
 
-    gem install qm
+    $ gem install qm
 
 ===
 
