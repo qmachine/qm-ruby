@@ -2,7 +2,7 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 14 Jul 2014
+#                                                   ~~ last updated 15 Jul 2014
 
 module QM
 
@@ -27,7 +27,7 @@ module QM
 
     def self::launch_service(*obj)
       # This function needs documentation.
-        require 'api-server.rb'
+        require 'server.rb'
         return QMachineService.run!
     end
 

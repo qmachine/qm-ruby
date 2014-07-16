@@ -1,6 +1,6 @@
 #-  Ruby source code / Rack configuration file
 
-#-  api-server.rb ~~
+#-  server.rb ~~
 #
 #   This file is a hacked-up version of the "teaching version" of QMachine,
 #   and the rest of this introduction reflects that.

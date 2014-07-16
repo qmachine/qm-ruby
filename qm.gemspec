@@ -2,7 +2,7 @@
 
 #-  qm.gemspec ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 13 Jul 2014
+#                                                   ~~ last updated 15 Jul 2014
 
 Gem::Specification.new do |spec|
 
@@ -20,8 +20,8 @@ Gem::Specification.new do |spec|
     ]
 
     spec.files = [
-        'lib/api-server.rb',
-        'lib/qm.rb'
+        'lib/qm.rb',
+        'lib/server.rb'
     ]
 
     spec.homepage = 'https://www.qmachine.org'
