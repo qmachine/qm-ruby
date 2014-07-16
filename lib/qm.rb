@@ -6,29 +6,18 @@
 
 module QM
 
-  private
-
-    class QM_Client
-
-        def initialize
-          # This function needs documentation.
-            # ...
-        end
-
-    end
-
-  public
-
-    def self::launch_client()
+    def self::launch_client(options = {})
       # This function needs documentation.
         puts '(placeholder: `launch_client`)'
         return
     end
 
-    def self::launch_service(*obj)
-      # This function needs documentation.
+    def self::launch_service(options = {})
+      # This function creates, configures, and launches a fresh Sinatra app
+      # that inherits from the original "teaching version".
         require 'server.rb'
-        return QMachineService.run!
+        app = Sinatra.new(QMachineServer) { configure { set options } }
+        return app.run!
     end
 
 end
