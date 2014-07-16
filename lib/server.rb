@@ -20,7 +20,7 @@
 #   I do plan to merge this program with the Ruby gem in the future, which is
 #   why the database schema matches the Node.js implementation's (which is not
 #   as straight-forward as it could be). For now, it serves its purpose, and it
-#   does so with just 95 lines of source code ;-)
+#   does so with just 93 lines of source code ;-)
 #
 #   NOTE: Using a "%" character incorrectly in a URL will cause you great
 #   anguish, and there isn't a good way for me to handle this problem "softly"
@@ -29,7 +29,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 15 Jul 2014
+#                                                   ~~ last updated 16 Jul 2014
 
 require 'json'
 require 'sinatra'
