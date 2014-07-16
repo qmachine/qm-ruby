@@ -17,11 +17,6 @@
 #   Sinatra's DSL makes things even "worse", to be honest. My advice here is,
 #   don't think too hard about it. Just enjoy it.
 #
-#   I do plan to merge this program with the Ruby gem in the future, which is
-#   why the database schema matches the Node.js implementation's (which is not
-#   as straight-forward as it could be). For now, it serves its purpose, and it
-#   does so with just 93 lines of source code ;-)
-#
 #   NOTE: Using a "%" character incorrectly in a URL will cause you great
 #   anguish, and there isn't a good way for me to handle this problem "softly"
 #   because it is the expected behavior (http://git.io/bmKr2w). Thus, you will
@@ -33,10 +28,12 @@
 
 require 'json'
 require 'sinatra'
-#require 'sinatra/cross_origin'
+require 'sinatra/cross_origin'
 require 'sqlite3'
 
 class QMachineServer < Sinatra::Base
+
+    register Sinatra::CrossOrigin
 
     configure do
 
@@ -133,7 +130,7 @@ class QMachineServer < Sinatra::Base
                 (@box.match(/^[\w\-]+$/)) and
                 ((@key.is_a?(String) and @key.match(/^[A-Za-z0-9]+$/)) or
                 (@status.is_a?(String) and @status.match(/^[A-Za-z0-9]+$/)))
-        #cross_origin if settings.enable_CORS?
+        cross_origin if settings.enable_CORS?
     end
 
     get '/:version/:box' do

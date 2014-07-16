@@ -3,8 +3,7 @@
 The `qm` gem for [Ruby](http://www.ruby-lang.org/) implements both the API
 server and web server components of [QMachine](https://www.qmachine.org) (QM).
 It currently only supports the use of [SQLite](https://www.sqlite.org/) as
-persistent storage, and [CORS](http://www.w3.org/TR/cors/) support is still
-lacking.
+persistent storage.
 
 Install
 -------
