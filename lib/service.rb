@@ -1,6 +1,6 @@
 #-  Ruby source code
 
-#-  server.rb ~~
+#-  service.rb ~~
 #
 #   This file is a hacked-up version of the "teaching version" of QMachine,
 #   and the rest of this introduction reflects that.
@@ -31,7 +31,7 @@ require 'sinatra'
 require 'sinatra/cross_origin'
 require 'sqlite3'
 
-class QMachineServer < Sinatra::Base
+class QMachineService < Sinatra::Base
 
     register Sinatra::CrossOrigin
 
@@ -40,12 +40,12 @@ class QMachineServer < Sinatra::Base
       # QMachine options
 
         set avar_ttl:               86400, # seconds
-            enable_api_server:      true,
-            enable_CORS:            true,
-            enable_web_server:      true,
+            enable_api_server:      false,
+            enable_CORS:            false,
+            enable_web_server:      false,
             hostname:               '0.0.0.0',
             persistent_storage:     'qm.db',
-            port:                   ENV['PORT'] || 8177,
+            port:                   8177,
             public_folder:          'public'
 
       # Sinatra mappings and options needed by QMachine.

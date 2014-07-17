@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
 
     spec.files = [
         'lib/qm.rb',
-        'lib/server.rb'
+        'lib/service.rb'
     ]
 
     spec.homepage = 'https://www.qmachine.org'
