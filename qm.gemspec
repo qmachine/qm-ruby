@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
     ]
 
     spec.files = [
+        'lib/defs-sqlite.rb',
         'lib/qm.rb',
         'lib/service.rb'
     ]
