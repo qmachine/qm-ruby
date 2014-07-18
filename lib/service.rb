@@ -16,17 +16,14 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 16 Jul 2014
+#                                                   ~~ last updated 17 Jul 2014
 
 require 'sinatra'
 require 'sinatra/cross_origin'
-require 'defs-sqlite'
 
 class QMachineService < Sinatra::Base
 
     register Sinatra::CrossOrigin
-
-    helpers Sinatra::SQLiteDefs
 
     configure do
 
@@ -37,7 +34,7 @@ class QMachineService < Sinatra::Base
             enable_CORS:            false,
             enable_web_server:      false,
             hostname:               '0.0.0.0',
-            persistent_storage:     'qm.db',
+            persistent_storage:     {},
             port:                   8177,
             public_folder:          'public'
 
@@ -56,7 +53,11 @@ class QMachineService < Sinatra::Base
     end
 
     helpers do
-     # This block defines subfunctions for use inside the route definitions.
+     # This block defines "subfunctions" for use inside the route definitions.
+     # The most important ones are the three functions for interacting with
+     # persistent storage: `get_avar`, `get_list`, and `set_avar`. Those three
+     # functions are not defined here -- they are defined separately in modules
+     # that are loaded at runtime by `QM::launch_service`.
 
         def hang_up
           # This helper method "hangs up" on a request by sending a nondescript

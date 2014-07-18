@@ -2,13 +2,22 @@
 
 #-  defs-sqlite.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 16 Jul 2014
+#                                                   ~~ last updated 17 Jul 2014
 
 require 'json'
 require 'sinatra/base'
 require 'sqlite3'
 
 module Sinatra
+
+    module SQLiteConnect
+
+        def sqlite_connect()
+          # This helper function doesn't do anything yet ...
+            return
+        end
+
+    end
 
     module SQLiteDefs
 
@@ -63,7 +72,8 @@ module Sinatra
           # anyway. Also, I have omitted indexing on `box_status` for obvious
           # reasons :-P
             begin
-                db = SQLite3::Database.open(settings.persistent_storage)
+                filename = settings.persistent_storage[:sqlite]
+                db = SQLite3::Database.open(filename)
                 db.execute_batch <<-sql
                     CREATE TABLE IF NOT EXISTS avars (
                         body TEXT NOT NULL,
@@ -90,6 +100,7 @@ module Sinatra
     end
 
     helpers SQLiteDefs
+    register SQLiteConnect
 
 end
 
