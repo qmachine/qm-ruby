@@ -2,7 +2,7 @@
 
 #-  defs-mongo.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 17 Jul 2014
+#                                                   ~~ last updated 18 Jul 2014
 
 require 'bson'
 require 'json'
@@ -23,7 +23,10 @@ module Sinatra
                 conn.authenticate(db.user, db.password)
             end
             set db: conn
-            #settings.db = conn
+            settings.db['avars'].ensure_index('box_status', {
+                background: true,
+                sparse: true
+            })
             settings.db['avars'].ensure_index('exp_date', {
                 expireAfterSeconds: settings.avar_ttl
             })
