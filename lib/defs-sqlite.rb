@@ -1,8 +1,13 @@
 #-  Ruby source code
 
 #-  defs-sqlite.rb ~~
+#
+#   These definitions work correctly, but I haven't figured out how to package
+#   them as part of the gem without ruining the ability to deploy to Heroku.
+#   See https://devcenter.heroku.com/articles/sqlite3.
+#
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 17 Jul 2014
+#                                                   ~~ last updated 18 Jul 2014
 
 require 'json'
 require 'sinatra/base'
