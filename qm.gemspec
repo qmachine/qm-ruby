@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
 
     spec.homepage = 'https://www.qmachine.org'
 
-    spec.license = 'Apache 2.0'
+    spec.license = 'Apache-2.0'
 
     spec.metadata = {
         'issue_tracker' => 'https://github.com/qmachine/qm-ruby/issues'
@@ -38,7 +38,7 @@ Gem::Specification.new do |spec|
 
     spec.summary = %q{A platform for World Wide Computing}
 
-    spec.version = '1.1.11'
+    spec.version = '1.1.12'
 
   # Specify dependencies
 
