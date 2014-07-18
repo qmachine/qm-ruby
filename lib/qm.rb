@@ -17,19 +17,19 @@ module QM
       # that inherits from the original "teaching version".
         require 'service.rb'
         require 'defs-mongo'
-        require 'defs-sqlite'
+        #require 'defs-sqlite'
         app = Sinatra.new(QMachineService) do
             register Sinatra::MongoConnect
-            register Sinatra::SQLiteConnect
+            #register Sinatra::SQLiteConnect
             configure do
                 set options
                 set bind: :hostname, run: false, static: :enable_web_server
-                if (settings.persistent_storage.has_key?(:sqlite)) then
-                    helpers Sinatra::SQLiteDefs
-                    sqlite_connect
-                elsif (settings.persistent_storage.has_key?(:mongo)) then
+                if (settings.persistent_storage.has_key?(:mongo)) then
                     helpers Sinatra::MongoDefs
                     mongo_connect
+                #elsif (settings.persistent_storage.has_key?(:sqlite)) then
+                #    helpers Sinatra::SQLiteDefs
+                #    sqlite_connect
                 end
             end
         end
