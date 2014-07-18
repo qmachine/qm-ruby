@@ -15,6 +15,6 @@ To install the latest release, run
 
 ===
 
-[![Gem Version](https://badge.fury.io/rb/qm.png)](http://badge.fury.io/rb/qm) [![Dependency Status](https://gemnasium.com/qmachine/qm-ruby.png)](https://gemnasium.com/qmachine/qm-ruby)
+[![Gem Version](https://badge.fury.io/rb/qm.svg)](http://badge.fury.io/rb/qm) [![Dependency Status](https://gemnasium.com/qmachine/qm-ruby.png)](https://gemnasium.com/qmachine/qm-ruby)
 
 <!-- vim:set syntax=markdown: -->
