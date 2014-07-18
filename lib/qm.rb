@@ -2,7 +2,7 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 17 Jul 2014
+#                                                   ~~ last updated 18 Jul 2014
 
 module QM
 
@@ -22,6 +22,7 @@ module QM
             register Sinatra::MongoConnect
             #register Sinatra::SQLiteConnect
             configure do
+                options.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
                 set options
                 set bind: :hostname, run: false, static: :enable_web_server
                 if (settings.persistent_storage.has_key?(:mongo)) then
