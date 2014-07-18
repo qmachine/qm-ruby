@@ -22,7 +22,17 @@ module QM
             register Sinatra::MongoConnect
             #register Sinatra::SQLiteConnect
             configure do
-                options.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
+                convert = lambda do |x|
+                  # This converts all keys in a hash to symbols recursively.
+                    if (x.is_a?(Hash)) then
+                        x = x.inject({}) do |memo, (k, v)|
+                            memo[k.to_sym] = convert.call(v)
+                            memo
+                        end
+                    end
+                    return x
+                end
+                options = convert.call(options)
                 set options
                 set bind: :hostname, run: false, static: :enable_web_server
                 if (settings.persistent_storage.has_key?(:mongo)) then
