@@ -2,14 +2,14 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 18 Jul 2014
+#                                                   ~~ last updated 20 Jul 2014
 
 module QM
 
     def self::launch_client(options = {})
       # This function needs documentation.
-        puts '(placeholder: `launch_client`)'
-        return
+        require 'client.rb'
+        return QMachineClient.new(options)
     end
 
     def self::launch_service(options = {})
