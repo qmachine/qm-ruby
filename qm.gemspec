@@ -2,7 +2,7 @@
 
 #-  qm.gemspec ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 20 Jul 2014
+#                                                   ~~ last updated 21 Jul 2014
 
 Gem::Specification.new do |spec|
 
@@ -50,6 +50,7 @@ Gem::Specification.new do |spec|
     spec.add_runtime_dependency('sinatra', '1.4.5')
     spec.add_runtime_dependency('sinatra-cross_origin', '0.3.2')
     #spec.add_runtime_dependency('sqlite3', '1.3.9')
+    spec.add_runtime_dependency('therubyracer', '0.12.1')
     spec.add_runtime_dependency('thin', '1.6.2')
     #spec.add_runtime_dependency('unicorn', '4.8.3')
 
