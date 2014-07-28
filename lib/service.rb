@@ -34,6 +34,7 @@ class QMachineService < Sinatra::Base
             enable_CORS:            false,
             enable_web_server:      false,
             hostname:               '0.0.0.0',
+            logging:                true,
             persistent_storage:     {},
             port:                   8177,
             public_folder:          'public',

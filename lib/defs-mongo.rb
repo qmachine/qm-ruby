@@ -40,7 +40,7 @@ module Sinatra
             unless db.user.nil? or db.password.nil?
                 conn.authenticate(db.user, db.password)
             end
-            set log_db: conn
+            set log_db: conn, logging: false
             return
         end
 
