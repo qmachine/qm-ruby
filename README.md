@@ -2,9 +2,10 @@
 
 The `qm` gem for [Ruby](http://www.ruby-lang.org/) implements both the API
 server and web server components of [QMachine](https://www.qmachine.org) (QM).
-The gem currently only supports [MongoDB](http://www.mongodb.org/) for
-persistent storage, although the repository contains working definitions for
-[SQLite](https://www.sqlite.org/).
+It uses [MongoDB](http://www.mongodb.org/) for persistent storage, and it can
+optionally log traffic data into a different MongoDB collection instead of
+logging to stdout. The repository still contains working definitions for using
+[SQLite](https://www.sqlite.org/) as persistent storage, however.
 
 Install
 -------
