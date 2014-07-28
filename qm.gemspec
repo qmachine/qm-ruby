@@ -2,7 +2,7 @@
 
 #-  qm.gemspec ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 21 Jul 2014
+#                                                   ~~ last updated 28 Jul 2014
 
 Gem::Specification.new do |spec|
 
@@ -42,8 +42,7 @@ Gem::Specification.new do |spec|
 
   # Specify dependencies
 
-    spec.add_runtime_dependency('bson', '1.10.2')
-    spec.add_runtime_dependency('bson_ext', '1.10.2')
+    spec.add_runtime_dependency('bson', '2.3.0')
     spec.add_runtime_dependency('json', '1.8.1')
     spec.add_runtime_dependency('httparty', '0.13.1')
     spec.add_runtime_dependency('mongo', '1.10.2')
