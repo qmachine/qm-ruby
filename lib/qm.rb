@@ -2,7 +2,7 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 20 Jul 2014
+#                                                   ~~ last updated 28 Jul 2014
 
 module QM
 
@@ -36,11 +36,18 @@ module QM
                 set options
                 set bind: :hostname, run: false, static: :enable_web_server
                 if (settings.persistent_storage.has_key?(:mongo)) then
-                    helpers Sinatra::MongoDefs
-                    mongo_connect
+                    helpers Sinatra::MongoAPIDefs
+                    mongo_api_connect
                 #elsif (settings.persistent_storage.has_key?(:sqlite)) then
                 #    helpers Sinatra::SQLiteDefs
                 #    sqlite_connect
+                end
+                if (settings.trafficlog_storage.has_key?(:mongo)) then
+                    helpers Sinatra::MongoLogDefs
+                    mongo_log_connect
+                    after do
+                        log_to_db
+                    end
                 end
             end
         end

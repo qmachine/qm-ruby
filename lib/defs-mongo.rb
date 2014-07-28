@@ -2,9 +2,8 @@
 
 #-  defs-mongo.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 18 Jul 2014
+#                                                   ~~ last updated 28 Jul 2014
 
-require 'bson'
 require 'json'
 require 'mongo'
 require 'sinatra/base'
@@ -14,7 +13,7 @@ module Sinatra
 
     module MongoConnect
 
-        def mongo_connect()
+        def mongo_api_connect()
           # This function needs documentation.
             db = URI.parse(settings.persistent_storage[:mongo])
             db_name = db.path.gsub(/^\//, '')
@@ -22,24 +21,36 @@ module Sinatra
             unless db.user.nil? or db.password.nil?
                 conn.authenticate(db.user, db.password)
             end
-            set db: conn
-            settings.db['avars'].ensure_index('box_status', {
+            set api_db: conn
+            settings.api_db['avars'].ensure_index('box_status', {
                 background: true,
                 sparse: true
             })
-            settings.db['avars'].ensure_index('exp_date', {
+            settings.api_db['avars'].ensure_index('exp_date', {
                 expireAfterSeconds: settings.avar_ttl
             })
             return
         end
 
+        def mongo_log_connect()
+          # This function needs documentation.
+            db = URI.parse(settings.trafficlog_storage[:mongo])
+            db_name = db.path.gsub(/^\//, '')
+            conn = Mongo::Connection.new(db.host, db.port).db(db_name)
+            unless db.user.nil? or db.password.nil?
+                conn.authenticate(db.user, db.password)
+            end
+            set log_db: conn
+            return
+        end
+
     end
 
-    module MongoDefs
+    module MongoAPIDefs
 
         def get_avar(params)
           # This helper function needs documentation.
-            bk, db = "#{params[0]}&#{params[1]}", settings.db
+            bk, db = "#{params[0]}&#{params[1]}", settings.api_db
             x = db['avars'].find_one({_id: bk})
             y = (x.nil?) ? '{}' : x['body']
             return y
@@ -47,7 +58,7 @@ module Sinatra
 
         def get_list(params)
           # This helper function needs documentation.
-            bs, db, x = "#{params[0]}&#{params[1]}", settings.db, []
+            bs, db, x = "#{params[0]}&#{params[1]}", settings.api_db, []
             db['avars'].find({box_status: bs}).each do |doc|
               # This block needs documentation.
                 x.push(doc['key'])
@@ -58,7 +69,7 @@ module Sinatra
 
         def set_avar(params)
           # This helper function needs documentation.
-            db = settings.db
+            db = settings.api_db
             doc = {
                 _id: "#{params[0]}&#{params[1]}",
                 body: params[2],
@@ -76,7 +87,24 @@ module Sinatra
 
     end
 
-    helpers MongoDefs
+    module MongoLogDefs
+
+        def log_to_db()
+          # This method needs documentation.
+            settings.log_db['traffic_tester'].insert({
+                host:   request.host,
+                ip:     request.ip,
+                method: request.request_method,
+                timestamp: Time.now,
+                #status: response.status,
+                url:    request.fullpath
+            })
+            return
+        end
+
+    end
+
+    helpers MongoAPIDefs, MongoLogDefs
     register MongoConnect
 
 end

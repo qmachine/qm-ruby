@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 17 Jul 2014
+#                                                   ~~ last updated 28 Jul 2014
 
 require 'sinatra'
 require 'sinatra/cross_origin'
@@ -36,7 +36,8 @@ class QMachineService < Sinatra::Base
             hostname:               '0.0.0.0',
             persistent_storage:     {},
             port:                   8177,
-            public_folder:          'public'
+            public_folder:          'public',
+            trafficlog_storage:     {}
 
       # Sinatra mappings and options needed by QMachine.
 
