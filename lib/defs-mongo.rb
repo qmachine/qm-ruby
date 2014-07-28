@@ -91,7 +91,7 @@ module Sinatra
 
         def log_to_db()
           # This method needs documentation.
-            settings.log_db['traffic_tester'].insert({
+            settings.log_db['traffic'].insert({
                 host:   request.host,
                 ip:     request.ip,
                 method: request.request_method,
