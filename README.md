@@ -7,9 +7,13 @@ optionally log traffic data into a different MongoDB collection instead of
 logging to stdout.
 
 The repository contains vestigial definitions for using
-[SQLite](https://www.sqlite.org/), but these may evolve away in the future. If
-you absolutely must use SQLite, you should take a look at the
+[SQLite](https://www.sqlite.org/), but these may "evolve away" in the future,
+primarily due to the
+[obstacle it poses](https://devcenter.heroku.com/articles/sqlite3)
+to deploying on [Heroku](https://www.heroku.com). If you are absolutely in love
+with SQLite (or just hate MongoDB), consider trying the
 [Node.js version](https://github.com/qmachine/qm-nodejs) instead.
+
 
 Install
 -------
