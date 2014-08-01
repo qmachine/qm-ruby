@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 28 Jul 2014
+#                                                   ~~ last updated 31 Jul 2014
 
 require 'sinatra'
 require 'sinatra/cross_origin'
@@ -43,7 +43,10 @@ class QMachineService < Sinatra::Base
       # Sinatra mappings and options needed by QMachine.
 
         mime_type webapp: 'application/x-web-app-manifest+json'
-        set bind: :hostname, run: false, static: :enable_web_server
+
+        set bind: settings.hostname,            # Actually, I am not sure if
+            run: false,                         # these lines are actually
+            static: settings.enable_web_server  # necessary anymore ...
 
       # See also: http://www.sinatrarb.com/configuration.html
 
