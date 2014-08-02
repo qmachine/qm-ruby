@@ -2,7 +2,7 @@
 
 #-  defs-mongo.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 28 Jul 2014
+#                                                   ~~ last updated 02 Aug 2014
 
 require 'json'
 require 'mongo'
@@ -27,7 +27,7 @@ module Sinatra
                 sparse: true
             })
             settings.api_db['avars'].ensure_index('exp_date', {
-                expireAfterSeconds: settings.avar_ttl
+                expireAfterSeconds: 0
             })
             return
         end
@@ -51,7 +51,11 @@ module Sinatra
         def get_avar(params)
           # This helper function needs documentation.
             bk, db = "#{params[0]}&#{params[1]}", settings.api_db
-            x = db['avars'].find_one({_id: bk})
+            x = db['avars'].find_and_modify({
+                query: {_id: "#{params[0]}&#{params[1]}"},
+                update: {'$set': {exp_date: Time.now + settings.avar_ttl}},
+                fields: {body: 1}
+            })
             y = (x.nil?) ? '{}' : x['body']
             return y
         end
@@ -73,7 +77,7 @@ module Sinatra
             doc = {
                 _id: "#{params[0]}&#{params[1]}",
                 body: params[2],
-                exp_date: Time.now,
+                exp_date: Time.now + settings.avar_ttl,
                 key: params[1]
             }
             options = {upsert: true}#, w: 1}
