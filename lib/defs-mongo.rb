@@ -85,7 +85,7 @@ module Sinatra
                 doc['body'] = params[3]
                 doc['box_status'] = "#{params[0]}&#{params[2]}"
             end
-            db['avars'].update({_id: doc['_id']}, doc, options)
+            db['avars'].update({_id: doc[:_id]}, doc, options)
             return
         end
 
