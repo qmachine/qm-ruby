@@ -50,10 +50,10 @@ module Sinatra
 
         def get_avar(params)
           # This helper function needs documentation.
-            bk, db = "#{params[0]}&#{params[1]}", settings.api_db
+            db = settings.api_db
             x = db['avars'].find_and_modify({
                 query: {_id: "#{params[0]}&#{params[1]}"},
-                update: {'$set': {exp_date: Time.now + settings.avar_ttl}},
+                update: {'$set' => {exp_date: Time.now + settings.avar_ttl}},
                 fields: {body: 1}
             })
             y = (x.nil?) ? '{}' : x['body']
@@ -85,7 +85,7 @@ module Sinatra
                 doc['body'] = params[3]
                 doc['box_status'] = "#{params[0]}&#{params[2]}"
             end
-            db['avars'].update({_id: doc[:_id]}, doc, options)
+            db['avars'].update({_id: doc['_id']}, doc, options)
             return
         end
 
