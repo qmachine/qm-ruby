@@ -1,8 +1,8 @@
 # qm
 
-The `qm` gem for [Ruby](http://www.ruby-lang.org/) implements both the API
-server and web server components of [QMachine](https://www.qmachine.org). It
-uses [MongoDB](http://www.mongodb.org/) for persistent storage, and it can
+The `qm` gem for [Ruby](http://www.ruby-lang.org/) includes a
+[QMachine](https://www.qmachine.org) API server and a web server. It uses
+[MongoDB](http://www.mongodb.org/) for persistent storage, and it can
 optionally log traffic data into a different MongoDB collection instead of
 logging to stdout.
 
@@ -14,13 +14,8 @@ to deploying on [Heroku](https://www.heroku.com). If you are absolutely in love
 with SQLite (or just hate MongoDB), consider trying the
 [Node.js version](https://github.com/qmachine/qm-nodejs) instead.
 
-
-Install
--------
-
-To install the latest release, run
-
-    $ gem install qm
+For more information, please see the
+[manual](https://docs.qmachine.org/en/latest/ruby.html).
 
 ===
 
