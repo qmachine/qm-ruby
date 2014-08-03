@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 31 Jul 2014
+#                                                   ~~ last updated 03 Aug 2014
 
 require 'sinatra'
 require 'sinatra/cross_origin'
@@ -34,7 +34,6 @@ class QMachineService < Sinatra::Base
             enable_CORS:            false,
             enable_web_server:      false,
             hostname:               '0.0.0.0',
-            logging:                true,
             persistent_storage:     {},
             port:                   8177,
             public_folder:          'public',
@@ -44,9 +43,10 @@ class QMachineService < Sinatra::Base
 
         mime_type webapp: 'application/x-web-app-manifest+json'
 
-        set bind: settings.hostname,            # Actually, I am not sure if
-            run: false,                         # these lines are actually
-            static: settings.enable_web_server  # necessary anymore ...
+        set bind: lambda { settings.hostname },
+            logging: true,
+            run: false,
+            static: lambda { settings.enable_web_server }
 
       # See also: http://www.sinatrarb.com/configuration.html
 
