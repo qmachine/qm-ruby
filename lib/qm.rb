@@ -2,7 +2,7 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 03 Aug 2014
+#                                                   ~~ last updated 04 Aug 2014
 
 module QM
 
@@ -40,7 +40,7 @@ module QM
                     helpers Sinatra::MongoLogDefs
                     mongo_log_connect
                     after do
-                        log_to_db
+                        log_to_db unless response.status == 444
                     end
                 end
             end
