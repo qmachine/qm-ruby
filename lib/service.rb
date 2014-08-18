@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 03 Aug 2014
+#                                                   ~~ last updated 17 Aug 2014
 
 require 'sinatra'
 require 'sinatra/cross_origin'
@@ -124,6 +124,14 @@ class QMachineService < Sinatra::Base
             set_avar([@box, @key, body])
         end
         return [201, {'Content-Type' => 'text/plain'}, ['']]
+    end
+
+    get '/robots.txt' do
+      # This route tells web crawlers to keep out of an API server, but it
+      # delegates to a static file if the web server is enabled.
+        pass if settings.enable_web_server?
+        y = 'User-agent: *\nDisallow: /\n'
+        return [200, {'Content-Type' => 'text/plain'}, [y]]
     end
 
     get '/' do
