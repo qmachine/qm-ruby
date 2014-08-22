@@ -2,7 +2,7 @@
 
 #-  defs-mongo.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 02 Aug 2014
+#                                                   ~~ last updated 21 Aug 2014
 
 require 'json'
 require 'mongo'
@@ -99,8 +99,8 @@ module Sinatra
                 host:   request.host,
                 ip:     request.ip,
                 method: request.request_method,
+                #status_code: response.status,
                 timestamp: Time.now,
-                #status: response.status,
                 url:    request.fullpath
             })
             return
