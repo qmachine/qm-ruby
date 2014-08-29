@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 18 Aug 2014
+#                                                   ~~ last updated 28 Aug 2014
 
 require 'sinatra'
 require 'sinatra/cross_origin'
@@ -31,7 +31,7 @@ class QMachineService < Sinatra::Base
 
         set avar_ttl:               86400, # seconds
             enable_api_server:      false,
-            enable_CORS:            false,
+            enable_cors:            false,
             enable_web_server:      false,
             hostname:               '0.0.0.0',
             persistent_storage:     {},
@@ -90,7 +90,7 @@ class QMachineService < Sinatra::Base
                 (@box.match(/^[\w\-]+$/)) and
                 ((@key.is_a?(String) and @key.match(/^[A-Za-z0-9]+$/)) or
                 (@status.is_a?(String) and @status.match(/^[A-Za-z0-9]+$/)))
-        cross_origin if settings.enable_CORS?
+        cross_origin if settings.enable_cors?
     end
 
     get '/:version/:box' do
