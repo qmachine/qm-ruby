@@ -7,7 +7,7 @@
 #   See https://devcenter.heroku.com/articles/sqlite3.
 #
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 18 Jul 2014
+#                                                   ~~ last updated 16 Nov 2014
 
 require 'json'
 require 'sinatra/base'
@@ -17,14 +17,14 @@ module Sinatra
 
     module SQLiteConnect
 
-        def sqlite_connect()
+        def sqlite_api_connect()
           # This helper function doesn't do anything yet ...
             return
         end
 
     end
 
-    module SQLiteDefs
+    module SQLiteAPIDefs
 
         def get_avar(params)
           # This method needs documentation.
@@ -104,7 +104,7 @@ module Sinatra
 
     end
 
-    helpers SQLiteDefs
+    helpers SQLiteAPIDefs
     register SQLiteConnect
 
 end
