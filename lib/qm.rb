@@ -2,11 +2,11 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 04 Aug 2014
+#                                                   ~~ last updated 17 Nov 2014
 
 module QM
 
-    def self::launch_client(options = {})
+    def self::launch_client(options = {mothership: 'https://api.qmachine.org'})
       # This function needs documentation.
         require 'client'
         return QMachineClient.new(options)
