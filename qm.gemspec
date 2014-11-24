@@ -38,7 +38,7 @@ Gem::Specification.new do |spec|
 
     spec.summary = %q{QMachine: A platform for World Wide Computing}
 
-    spec.version = '1.2.0'
+    spec.version = '1.2.1'
 
   # Specify dependencies
 
