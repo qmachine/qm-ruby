@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 28 Aug 2014
+#                                                   ~~ last updated 30 Nov 2014
 
 require 'sinatra'
 require 'sinatra/cross_origin'
@@ -88,8 +88,8 @@ class QMachineService < Sinatra::Base
         hang_up unless (settings.enable_api_server?) and
                 ((version == 'box') or (version == 'v1')) and
                 (@box.match(/^[\w\-]+$/)) and
-                ((@key.is_a?(String) and @key.match(/^[A-Za-z0-9]+$/)) or
-                (@status.is_a?(String) and @status.match(/^[A-Za-z0-9]+$/)))
+                ((@key.is_a?(String) and @key.match(/^[A-z0-9]+$/)) or
+                (@status.is_a?(String) and @status.match(/^[A-z0-9]+$/)))
         cross_origin if settings.enable_cors?
     end
 
@@ -117,7 +117,7 @@ class QMachineService < Sinatra::Base
         if x['status'].is_a?(String) then
           # This arm runs only when a client writes an avar which represents a
           # task description.
-            hang_up unless x['status'].match(/^[A-Za-z0-9]+$/)
+            hang_up unless x['status'].match(/^[A-z0-9]+$/)
             set_avar([@box, @key, x['status'], body])
         else
           # This arm runs when a client is writing a "regular avar".
