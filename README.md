@@ -9,7 +9,7 @@ logging to stdout. A client is also in development.
 Note that the original [SQLite](https://www.sqlite.org/) definitions are now
 only available in the
 [`sqlite3` branch](https://github.com/qmachine/qm-ruby/tree/sqlite3). This
-decisions was primarily due to the
+decision was motivated primarily by the
 [obstacle it poses](https://devcenter.heroku.com/articles/sqlite3)
 to deploying on [Heroku](https://www.heroku.com). If you are absolutely in love
 with SQLite (or just hate MongoDB), consider trying the
