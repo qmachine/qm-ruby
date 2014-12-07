@@ -2,7 +2,7 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 17 Nov 2014
+#                                                   ~~ last updated 07 Dec 2014
 
 module QM
 
@@ -22,7 +22,7 @@ module QM
             configure do
                 convert = lambda do |x|
                   # This converts all keys in a hash to symbols recursively.
-                    if (x.is_a?(Hash)) then
+                    if x.is_a?(Hash) then
                         x = x.inject({}) do |memo, (k, v)|
                             memo[k.to_sym] = convert.call(v)
                             memo
@@ -32,11 +32,11 @@ module QM
                 end
                 options = convert.call(options)
                 set options
-                if (settings.persistent_storage.has_key?(:mongo)) then
+                if settings.persistent_storage.has_key?(:mongo) then
                     helpers Sinatra::MongoAPIDefs
                     mongo_api_connect
                 end
-                if (settings.trafficlog_storage.has_key?(:mongo)) then
+                if settings.trafficlog_storage.has_key?(:mongo) then
                     helpers Sinatra::MongoLogDefs
                     mongo_log_connect
                     after do
