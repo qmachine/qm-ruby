@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 02 Dec 2014
+#                                                   ~~ last updated 07 Dec 2014
 
 require 'sinatra'
 require 'sinatra/cross_origin'
@@ -127,10 +127,16 @@ class QMachineService < Sinatra::Base
     end
 
     get '/robots.txt' do
-      # This route tells web crawlers to keep out of an API server, but it
-      # delegates to a static file if the web server is enabled.
-        pass if settings.enable_web_server?
-        y = "User-agent: *\nDisallow: /\n"
+      # This route delegates to the web server, if it was enabled at launch and
+      # if the appropriate file exists; otherwise, it returns a message to web
+      # crawlers instructing them to keep out.
+        robots_file = File.join(settings.public_folder, 'robots.txt')
+        if settings.enable_web_server? then
+            pass if File.exists?(robots_file)
+            y = "User-agent: *\nDisallow: /box/\nDisallow: /v1/\n"
+        else
+            y = "User-agent: *\nDisallow: /\n"
+        end
         return [200, {'Content-Type' => 'text/plain'}, [y]]
     end
 
