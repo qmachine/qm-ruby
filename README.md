@@ -1,4 +1,6 @@
-# qm
+qm
+==
+
 
 The `qm` gem for [Ruby](http://www.ruby-lang.org/) includes a
 [QMachine](https://www.qmachine.org) API server and a web server. It uses
@@ -22,4 +24,3 @@ For more information, please see the
 
 [![Gem Version](https://badge.fury.io/rb/qm.svg)](http://badge.fury.io/rb/qm) [![Dependency Status](https://gemnasium.com/qmachine/qm-ruby.png)](https://gemnasium.com/qmachine/qm-ruby)
 
-<!-- vim:set syntax=markdown: -->
