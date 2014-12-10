@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 07 Dec 2014
+#                                                   ~~ last updated 10 Dec 2014
 
 require 'sinatra'
 require 'sinatra/cross_origin'
@@ -41,7 +41,7 @@ class QMachineService < Sinatra::Base
 
       # Sinatra mappings and options needed by QMachine.
 
-        mime_type webapp: 'application/x-web-app-manifest+json'
+        mime_type :webapp, 'application/x-web-app-manifest+json'
 
         set bind: lambda { settings.hostname },
             logging: true,
