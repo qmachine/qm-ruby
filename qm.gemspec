@@ -2,7 +2,7 @@
 
 #-  qm.gemspec ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 24 Nov 2014
+#                                                   ~~ last updated 22 Dec 2014
 
 Gem::Specification.new do |spec|
 
@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
     spec.date = Time.now
 
-    spec.description = 'This is a port of the QMachine web service.'
+    spec.description = 'Ruby port of QMachine web service + in-progress client'
 
     spec.email = 'sean@mathbiol.org'
 
