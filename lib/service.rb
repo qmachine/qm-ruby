@@ -45,7 +45,9 @@ class QMachineService < Sinatra::Base
 
         set bind: lambda { settings.hostname },
             logging: true,
+            raise_errors: false,
             run: false,
+            show_exceptions: false,
             static: lambda { settings.enable_web_server }
 
       # See also: http://www.sinatrarb.com/configuration.html
@@ -112,11 +114,7 @@ class QMachineService < Sinatra::Base
       # such as when uploading results or submitting new tasks.
         hang_up unless @key.is_a?(String) and not @status.is_a?(String)
         body = request.body.read
-        begin
-            x = JSON.parse(body)
-        rescue
-            hang_up
-        end
+        x = JSON.parse(body)
         hang_up unless (@box == x['box']) and (@key == x['key'])
         if x['status'].is_a?(String) then
           # This arm runs only when a client writes an avar which represents a
