@@ -68,9 +68,11 @@ class QMachineService < Sinatra::Base
      # that are loaded at runtime by `QM::launch_service`.
 
         def hang_up
-          # This helper method "hangs up" on a request by sending a nondescript
-          # 444 response back to the client, a convention taken from nginx.
-            halt [444, {'Content-Type' => 'text/plain'}, ['']]
+          # This helper literally "hangs up" on the request by immediately
+          # halting further processing, responding with a nondescript 444
+          # status code and an empty body, and then closing the connection.
+            headers = {'Connection' => 'close', 'Content-Type' => 'text/plain'}
+            halt [444, headers, ['']]
         end
 
     end
