@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 11 Jan 2015
+#                                                   ~~ last updated 12 Jan 2015
 
 require 'sinatra'
 require 'sinatra/cross_origin'
@@ -72,6 +72,9 @@ class QMachineService < Sinatra::Base
           # This helper literally "hangs up" on the request by immediately
           # halting further processing, responding with a nondescript 444
           # status code and an empty body, and then closing the connection.
+          # Unfortunately, closing the connection in this way caused problems
+          # in the Node.js implementation, which suggests that this is not the
+          # correct solution for all concurrency models ... argh.
             headers = {'Connection' => 'close', 'Content-Type' => 'text/plain'}
             halt [444, headers, ['']]
         end
