@@ -2,7 +2,7 @@
 
 #-  qm.gemspec ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 11 Jan 2015
+#                                                   ~~ last updated 12 Jan 2015
 
 Gem::Specification.new do |spec|
 
@@ -38,7 +38,7 @@ Gem::Specification.new do |spec|
 
     spec.summary = %q{QMachine: A platform for World Wide Computing}
 
-    spec.version = '1.2.1'
+    spec.version = '1.2.2'
 
   # Specify dependencies
 
