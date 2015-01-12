@@ -48,7 +48,8 @@ class QMachineService < Sinatra::Base
             raise_errors: false,
             run: false,
             show_exceptions: false,
-            static: lambda { settings.enable_web_server }
+            static: lambda { settings.enable_web_server },
+            x_cascade: false
 
       # See also: http://www.sinatrarb.com/configuration.html
 
