@@ -34,6 +34,7 @@ class QMachineService < Sinatra::Base
             enable_cors:            false,
             enable_web_server:      false,
             hostname:               '0.0.0.0',
+            max_body_size:          1048576, # 1024 * 1024 = 1 MB
             persistent_storage:     {},
             port:                   8177,
             public_folder:          'public',
@@ -94,7 +95,8 @@ class QMachineService < Sinatra::Base
                 ((version == 'box') or (version == 'v1')) and
                 (@box.match(/^[\w\-]+$/)) and
                 ((@key.is_a?(String) and @key.match(/^[\w\-]+$/)) or
-                (@status.is_a?(String) and @status.match(/^[\w\-]+$/)))
+                (@status.is_a?(String) and @status.match(/^[\w\-]+$/))) and
+                (request.content_length.to_s.to_i(10) < settings.max_body_size)
         cross_origin if settings.enable_cors?
     end
 
