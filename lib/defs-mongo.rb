@@ -2,7 +2,7 @@
 
 #-  defs-mongo.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 14 Dec 2014
+#                                                   ~~ last updated 12 Jan 2015
 
 require 'json'
 require 'mongo'
@@ -54,21 +54,22 @@ module Sinatra
             x = db['avars'].find_and_modify({
                 query: {_id: "#{params[0]}&#{params[1]}"},
                 update: {'$set' => {exp_date: Time.now + settings.avar_ttl}},
-                fields: {body: 1}
+                fields: {body: 1, _id: 0}
             })
-            y = (x.nil?) ? '{}' : x['body']
-            return y
+            return (x.nil?) ? '{}' : x['body']
         end
 
         def get_list(params)
           # This helper function needs documentation.
-            bs, db, x = "#{params[0]}&#{params[1]}", settings.api_db, []
-            db['avars'].find({box_status: bs}).each do |doc|
+            db = settings.api_db
+            options = {fields: {key: 1, _id: 0}}
+            query = {box_status: "#{params[0]}&#{params[1]}"}
+            x = []
+            db['avars'].find(query, options).each do |doc|
               # This block needs documentation.
                 x.push(doc['key'])
             end
-            y = (x.length == 0) ? '[]' : x.to_json
-            return y
+            return (x.length == 0) ? '[]' : x.to_json
         end
 
         def set_avar(params)
@@ -80,7 +81,7 @@ module Sinatra
                 exp_date: Time.now + settings.avar_ttl,
                 key: params[1]
             }
-            options = {upsert: true}#, w: 1}
+            options = {upsert: true} #, w: 1}
             if (params.length == 4) then
                 doc['body'] = params[3]
                 doc['box_status'] = "#{params[0]}&#{params[2]}"
@@ -96,12 +97,12 @@ module Sinatra
         def log_to_db()
           # This method needs documentation.
             settings.log_db['traffic'].insert({
-                host:   request.host,
-                ip:     request.ip,
-                method: request.request_method,
-                status_code: response.status,
-                timestamp: Time.now,
-                url:    request.fullpath
+                host:           request.host,
+                ip:             request.ip,
+                method:         request.request_method,
+                status_code:    response.status,
+                timestamp:      Time.now,
+                url:            request.fullpath
             })
             return
         end
