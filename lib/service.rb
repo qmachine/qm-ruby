@@ -29,12 +29,12 @@ class QMachineService < Sinatra::Base
 
       # QMachine options
 
-        set avar_ttl:               86400, # seconds
+        set avar_ttl:               86400, # seconds (24 * 60 * 60 = 1 day)
             enable_api_server:      false,
             enable_cors:            false,
             enable_web_server:      false,
             hostname:               '0.0.0.0',
-            max_body_size:          1048576, # 1024 * 1024 = 1 MB
+            max_body_size:          1048576, # bytes (1024 * 1024 = 1 MB)
             persistent_storage:     {},
             port:                   8177,
             public_folder:          'public',
@@ -88,17 +88,16 @@ class QMachineService < Sinatra::Base
 
   # Route definitions
 
-    before '/*/*' do |version, box|
+    before '/:version/:box' do
       # When any request matches the pattern given, this block will execute
       # before the route that corresponds to its HTTP method. The code here
       # will validate the request's parameters and store them as instance
       # variables that will be available to the corresponding route's code.
-        @box, @key, @status = box, params[:key], params[:status]
-        hang_up unless (settings.enable_api_server?) and
-                ((version == 'box') or (version == 'v1')) and
-                (@box.match(/^[\w\-]+$/)) and
-                ((@key.is_a?(String) and @key.match(/^[\w\-]+$/)) or
-                (@status.is_a?(String) and @status.match(/^[\w\-]+$/))) and
+        @box, @key, @status = params[:box], params[:key], params[:status]
+        hang_up unless settings.enable_api_server? and
+                ((params[:version] == 'box') or (params[:version] == 'v1')) and
+                (@key.is_a?(String) ^ @status.is_a?(String)) and
+                (@box + @key.to_s + @status.to_s).match(/^[\w\-]+$/) and
                 (request.content_length.to_s.to_i(10) < settings.max_body_size)
         cross_origin if settings.enable_cors?
     end
@@ -106,7 +105,6 @@ class QMachineService < Sinatra::Base
     get '/:version/:box' do
       # This route responds to API calls that "read" from persistent storage,
       # such as when checking for new tasks to run or downloading results.
-        hang_up unless (@key.is_a?(String) ^ @status.is_a?(String))
         if @key.is_a?(String) then
           # This arm runs when a client requests the value of a specific avar.
             y = get_avar([@box, @key])
@@ -120,7 +118,7 @@ class QMachineService < Sinatra::Base
     post '/:version/:box' do
       # This route responds to API calls that "write" to persistent storage,
       # such as when uploading results or submitting new tasks.
-        hang_up unless @key.is_a?(String) and not @status.is_a?(String)
+        hang_up unless @key.is_a?(String)
         body = request.body.read
         begin
             x = JSON.parse(body)
