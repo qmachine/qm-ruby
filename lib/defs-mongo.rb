@@ -74,7 +74,8 @@ module Sinatra
                 fields: {
                     _id: 0,
                     body: 1
-                }
+                },
+                upsert: false
             })
             return (x.nil?) ? '{}' : x['body']
         end
