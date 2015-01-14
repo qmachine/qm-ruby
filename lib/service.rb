@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 12 Jan 2015
+#                                                   ~~ last updated 14 Jan 2015
 
 require 'sinatra'
 require 'sinatra/cross_origin'
@@ -34,7 +34,7 @@ class QMachineService < Sinatra::Base
             enable_cors:            false,
             enable_web_server:      false,
             hostname:               '0.0.0.0',
-            max_body_size:          1048576, # bytes (1024 * 1024 = 1 MB)
+            max_body_size:          65536, # bytes (64 * 1024 = 64 KB)
             persistent_storage:     {},
             port:                   8177,
             public_folder:          'public',
