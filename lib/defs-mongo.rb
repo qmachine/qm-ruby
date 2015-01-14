@@ -2,7 +2,7 @@
 
 #-  defs-mongo.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 12 Jan 2015
+#                                                   ~~ last updated 14 Jan 2015
 
 require 'json'
 require 'mongo'
@@ -22,10 +22,21 @@ module Sinatra
                 conn.authenticate(db.user, db.password)
             end
             set api_db: conn
-            settings.api_db['avars'].ensure_index('box_status', {
-                background: true,
-                sparse: true
+            settings.api_db['avars'].ensure_index({
+                box: Mongo::ASCENDING,
+                key: Mongo::ASCENDING
+            }, {
+                #background: true,
+                unique: true
             })
+          # This query covers the `get_list` query completely, but because an
+          # index trades space for time, it needs to be profiled first to make
+          # sure it's actually faster.
+            #settings.api_db['avars'].ensure_index({
+            #    box: Mongo::ASCENDING,
+            #    key: Mongo::ASCENDING,
+            #    status: Mongo::ASCENDING
+            #})
             settings.api_db['avars'].ensure_index('exp_date', {
                 expireAfterSeconds: 0
             })
@@ -50,22 +61,38 @@ module Sinatra
 
         def get_avar(params)
           # This helper function needs documentation.
-            db = settings.api_db
-            x = db['avars'].find_and_modify({
-                query: {_id: "#{params[0]}&#{params[1]}"},
-                update: {'$set' => {exp_date: Time.now + settings.avar_ttl}},
-                fields: {body: 1, _id: 0}
+            x = settings.api_db['avars'].find_and_modify({
+                query: {
+                    box: params[0],
+                    key: params[1]
+                },
+                update: {
+                    '$set': {
+                        exp_date: Time.now + settings.avar_ttl
+                    }
+                },
+                fields: {
+                    _id: 0,
+                    body: 1
+                }
             })
             return (x.nil?) ? '{}' : x['body']
         end
 
         def get_list(params)
           # This helper function needs documentation.
-            db = settings.api_db
-            options = {fields: {key: 1, _id: 0}}
-            query = {box_status: "#{params[0]}&#{params[1]}"}
+            options = {
+                fields: {
+                    _id: 0,
+                    key: 1
+                }
+            }
+            query = {
+                box: params[0],
+                status: params[1]
+            }
             x = []
-            db['avars'].find(query, options).each do |doc|
+            settings.api_db['avars'].find(query, options).each do |doc|
               # This block needs documentation.
                 x.push(doc['key'])
             end
@@ -74,19 +101,22 @@ module Sinatra
 
         def set_avar(params)
           # This helper function needs documentation.
-            db = settings.api_db
             doc = {
-                _id: "#{params[0]}&#{params[1]}",
-                body: params[2],
+                body: params.last,
+                box: params[0],
                 exp_date: Time.now + settings.avar_ttl,
                 key: params[1]
             }
-            options = {upsert: true} #, w: 1}
-            if (params.length == 4) then
-                doc['body'] = params[3]
-                doc['box_status'] = "#{params[0]}&#{params[2]}"
-            end
-            db['avars'].update({_id: doc[:_id]}, doc, options)
+            doc['status'] = params[2] if params.length == 4
+            options = {
+                multi: false,
+                upsert: true
+            }
+            query = {
+                box: params[0],
+                key: params[1]
+            }
+            settings.api_db['avars'].update(query, doc, options)
             return
         end
 
