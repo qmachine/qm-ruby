@@ -2,7 +2,7 @@
 
 #-  defs-mongo.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 14 Jan 2015
+#                                                   ~~ last updated 20 Jan 2015
 
 require 'json'
 require 'mongo'
@@ -15,14 +15,13 @@ module Sinatra
 
         def mongo_api_connect()
           # This function needs documentation.
-            db = URI.parse(settings.persistent_storage[:mongo])
-            db_name = db.path.gsub(/^\//, '')
-            conn = Mongo::Connection.new(db.host, db.port).db(db_name)
-            unless db.user.nil? or db.password.nil?
-                conn.authenticate(db.user, db.password)
+            u = URI.parse(settings.persistent_storage[:mongo])
+            db_name = u.path.gsub(/^\//, '')
+            db = Mongo::Connection.new(u.host, u.port).db(db_name)
+            unless u.user.nil? or u.password.nil?
+                db.authenticate(u.user, u.password)
             end
-            set api_db: conn
-            settings.api_db['avars'].ensure_index({
+            db['avars'].ensure_index({
                 box: Mongo::ASCENDING,
                 key: Mongo::ASCENDING
             }, {
@@ -32,27 +31,26 @@ module Sinatra
           # This query covers the `get_list` query completely, but because an
           # index trades space for time, it needs to be profiled first to make
           # sure it's actually faster.
-            #settings.api_db['avars'].ensure_index({
+            #db['avars'].ensure_index({
             #    box: Mongo::ASCENDING,
             #    key: Mongo::ASCENDING,
             #    status: Mongo::ASCENDING
             #})
-            settings.api_db['avars'].ensure_index('exp_date', {
+            db['avars'].ensure_index('exp_date', {
                 expireAfterSeconds: 0
             })
-            return
+            return db
         end
 
         def mongo_log_connect()
           # This function needs documentation.
-            db = URI.parse(settings.trafficlog_storage[:mongo])
-            db_name = db.path.gsub(/^\//, '')
-            conn = Mongo::Connection.new(db.host, db.port).db(db_name)
-            unless db.user.nil? or db.password.nil?
-                conn.authenticate(db.user, db.password)
+            u = URI.parse(settings.trafficlog_storage[:mongo])
+            db_name = u.path.gsub(/^\//, '')
+            db = Mongo::Connection.new(u.host, u.port).db(db_name)
+            unless u.user.nil? or u.password.nil?
+                db.authenticate(u.user, u.password)
             end
-            set log_db: conn, logging: false
-            return
+            return db
         end
 
     end

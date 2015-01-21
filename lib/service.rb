@@ -16,16 +16,23 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 14 Jan 2015
+#                                                   ~~ last updated 20 Jan 2015
 
 require 'sinatra'
 require 'sinatra/cross_origin'
 
+require 'defs-mongo'
+
 class QMachineService < Sinatra::Base
 
     register Sinatra::CrossOrigin
+    register Sinatra::MongoConnect
 
     configure do
+
+      # Helper methods
+
+        helpers Sinatra::MongoAPIDefs, Sinatra::MongoLogDefs
 
       # QMachine options
 
@@ -44,12 +51,24 @@ class QMachineService < Sinatra::Base
 
         mime_type :webapp, 'application/x-web-app-manifest+json'
 
-        set bind: lambda { settings.hostname },
-            logging: true,
+        set api_db: lambda {
+                mongo_api_connect
+            },
+            bind: lambda {
+                settings.hostname
+            },
+            log_db: lambda {
+                mongo_log_connect
+            },
+            logging: lambda {
+                settings.trafficlog_storage.has_key?(:mongo) == false
+            },
             raise_errors: false,
-            run: false,
+            run: true,
             show_exceptions: false,
-            static: lambda { settings.enable_web_server },
+            static: lambda {
+                settings.enable_web_server
+            },
             x_cascade: false
 
       # See also: http://www.sinatrarb.com/configuration.html
@@ -86,7 +105,11 @@ class QMachineService < Sinatra::Base
         hang_up
     end
 
-  # Route definitions
+  # Filter definitions
+
+    after do
+        log_to_db unless response.status === 444 or settings.logging == true
+    end
 
     before '/:version/:box' do
       # When any request matches the pattern given, this block will execute
@@ -101,6 +124,8 @@ class QMachineService < Sinatra::Base
                 (request.content_length.to_s.to_i(10) < settings.max_body_size)
         cross_origin if settings.enable_cors?
     end
+
+  # Route definitions
 
     get '/:version/:box' do
       # This route responds to API calls that "read" from persistent storage,
