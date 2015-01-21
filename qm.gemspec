@@ -2,7 +2,7 @@
 
 #-  qm.gemspec ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 12 Jan 2015
+#                                                   ~~ last updated 21 Jan 2015
 
 Gem::Specification.new do |spec|
 
@@ -48,6 +48,7 @@ Gem::Specification.new do |spec|
     spec.add_runtime_dependency('mongo', '1.11.1')
     spec.add_runtime_dependency('sinatra', '1.4.5')
     spec.add_runtime_dependency('sinatra-cross_origin', '0.3.2')
+    spec.add_runtime_dependency('unicorn', '4.8.3')
 
 end
 
