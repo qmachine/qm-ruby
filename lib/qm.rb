@@ -47,7 +47,7 @@ module QM
             ],
             preload_app: true,
             timeout: 30,
-            worker_processes: app.settings.worker_procs
+            worker_processes: app.settings.worker_procs.to_s.to_i(10)
         }).start.join
         return
     end
