@@ -45,6 +45,7 @@ module QM
             listeners: [
                 app.settings.hostname.to_s + ':' + app.settings.port.to_s
             ],
+            preload_app: true,
             timeout: 30,
             worker_processes: app.settings.worker_procs
         }).start.join
