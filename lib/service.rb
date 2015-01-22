@@ -50,7 +50,7 @@ class QMachineService < Sinatra::Base
 
       # Sinatra mappings and options needed by QMachine.
 
-        mime_type :webapp, 'application/x-web-app-manifest+json'
+        mime_type webapp: 'application/x-web-app-manifest+json'
 
         set api_db: lambda {
                 mongo_api_connect
