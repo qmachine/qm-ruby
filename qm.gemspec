@@ -2,7 +2,7 @@
 
 #-  qm.gemspec ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 21 Jan 2015
+#                                                   ~~ last updated 22 Jan 2015
 
 Gem::Specification.new do |spec|
 
@@ -13,6 +13,8 @@ Gem::Specification.new do |spec|
     spec.description = 'Ruby port of QMachine web service + in-progress client'
 
     spec.email = 'sean@mathbiol.org'
+
+    spec.executables = []
 
     spec.extra_rdoc_files = [
         'LICENSE',
