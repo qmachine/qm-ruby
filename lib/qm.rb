@@ -6,17 +6,12 @@
 
 module QM
 
-    def self::launch_client(options = {mothership: 'https://api.qmachine.org'})
-      # This function needs documentation.
-        require 'client'
-        return QMachineClient.new(options)
-    end
-
-    def self::launch_service(options = {})
-      # This function creates, configures, and launches a fresh Sinatra app
-      # that inherits from the original "teaching version".
+    def self::create_app(options = {})
+      # This method creates and configures a fresh Sinatra app that inherits
+      # from the original "teaching version". This code is separated from the
+      # `launch_service` method's code to allow a `QMachineService` instance to
+      # be used from the "config.ru" file of a Rack app.
         require 'service'
-        require 'unicorn'
         app = Sinatra.new(QMachineService) do
             configure do
                 convert = lambda do |x|
@@ -33,8 +28,22 @@ module QM
                 set options
             end
         end
+        return app
+    end
+
+    def self::launch_client(options = {mothership: 'https://api.qmachine.org'})
+      # This function needs documentation.
+        require 'client'
+        return QMachineClient.new(options)
+    end
+
+    def self::launch_service(options = {})
+      # This function creates, configures, and launches a fresh Sinatra app
+      # that inherits from the original "teaching version". There is probably
+      # a prettier way to do this, but this works fine for right now.
+        require 'unicorn'
+        app = self::create_app(options)
         Unicorn::HttpServer.new(app, {
-            #logger: Logger.new($stderr),
             listeners: [
                 app.settings.hostname.to_s + ':' + app.settings.port.to_s
             ],
