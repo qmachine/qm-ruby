@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 21 Jan 2015
+#                                                   ~~ last updated 22 Jan 2015
 
 require 'sinatra'
 require 'sinatra/cross_origin'
@@ -53,19 +53,19 @@ class QMachineService < Sinatra::Base
         mime_type webapp: 'application/x-web-app-manifest+json'
 
         set api_db: lambda {
-                mongo_api_connect
+                mongo_api_connect(settings.persistent_storage[:mongo])
             },
             bind: lambda {
                 settings.hostname
             },
             log_db: lambda {
-                mongo_log_connect
+                mongo_log_connect(settings.trafficlog_storage[:mongo])
             },
             logging: lambda {
                 settings.trafficlog_storage.has_key?(:mongo) == false
             },
             raise_errors: false,
-            run: true,
+            run: false,
             show_exceptions: false,
             static: lambda {
                 settings.enable_web_server

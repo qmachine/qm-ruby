@@ -1,56 +1,35 @@
 #-  Ruby source code
-
+#
 #-  defs-mongo.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 20 Jan 2015
+#                                                   ~~ last updated 22 Jan 2015
 
 require 'json'
 require 'mongo'
 require 'sinatra/base'
-require 'uri'
 
 module Sinatra
 
     module MongoConnect
 
-        def mongo_api_connect()
-          # This function needs documentation.
-            u = URI.parse(settings.persistent_storage[:mongo])
-            db_name = u.path.gsub(/^\//, '')
-            db = Mongo::Connection.new(u.host, u.port).db(db_name)
-            unless u.user.nil? or u.password.nil?
-                db.authenticate(u.user, u.password)
-            end
-            db['avars'].ensure_index({
+        def mongo_api_connect(connection_string)
+          # This helper function needs documentation.
+            db = Mongo::MongoClient.from_uri(connection_string).db
+            db.collection('avars').ensure_index({
                 box: Mongo::ASCENDING,
                 key: Mongo::ASCENDING
             }, {
-                #background: true,
                 unique: true
             })
-          # This query covers the `get_list` query completely, but because an
-          # index trades space for time, it needs to be profiled first to make
-          # sure it's actually faster.
-            #db['avars'].ensure_index({
-            #    box: Mongo::ASCENDING,
-            #    key: Mongo::ASCENDING,
-            #    status: Mongo::ASCENDING
-            #})
-            db['avars'].ensure_index('exp_date', {
+            db.collection('avars').ensure_index('exp_date', {
                 expireAfterSeconds: 0
             })
             return db
         end
 
-        def mongo_log_connect()
-          # This function needs documentation.
-            u = URI.parse(settings.trafficlog_storage[:mongo])
-            db_name = u.path.gsub(/^\//, '')
-            db = Mongo::Connection.new(u.host, u.port).db(db_name)
-            unless u.user.nil? or u.password.nil?
-                db.authenticate(u.user, u.password)
-            end
-            return db
+        def mongo_log_connect(connection_string)
+          # This helper function needs documentation.
+            return Mongo::MongoClient.from_uri(connection_string).db
         end
 
     end
@@ -59,7 +38,7 @@ module Sinatra
 
         def get_avar(params)
           # This helper function needs documentation.
-            x = settings.api_db['avars'].find_and_modify({
+            x = settings.api_db.collection('avars').find_and_modify({
                 query: {
                     box: params[0],
                     key: params[1]
@@ -80,7 +59,7 @@ module Sinatra
 
         def get_list(params)
           # This helper function needs documentation.
-            options = {
+            opts = {
                 fields: {
                     _id: 0,
                     key: 1
@@ -91,7 +70,7 @@ module Sinatra
                 status: params[1]
             }
             x = []
-            settings.api_db['avars'].find(query, options).each do |doc|
+            settings.api_db.collection('avars').find(query, opts).each do |doc|
               # This block needs documentation.
                 x.push(doc['key'])
             end
@@ -107,7 +86,7 @@ module Sinatra
                 key: params[1]
             }
             doc['status'] = params[2] if params.length == 4
-            options = {
+            opts = {
                 multi: false,
                 upsert: true
             }
@@ -115,7 +94,7 @@ module Sinatra
                 box: params[0],
                 key: params[1]
             }
-            settings.api_db['avars'].update(query, doc, options)
+            settings.api_db.collection('avars').update(query, doc, opts)
             return
         end
 
@@ -125,7 +104,7 @@ module Sinatra
 
         def log_to_db()
           # This method needs documentation.
-            settings.log_db['traffic'].insert({
+            settings.log_db.collection('traffic').insert({
                 host:           request.host,
                 ip:             request.ip,
                 method:         request.request_method,
