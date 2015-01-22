@@ -2,12 +2,12 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 21 Jan 2015
+#                                                   ~~ last updated 22 Jan 2015
 
 module QM
 
     def self::create_app(options = {})
-      # This method creates and configures a fresh Sinatra app that inherits
+      # This function creates and configures a fresh Sinatra app that inherits
       # from the original "teaching version". This code is separated from the
       # `launch_service` method's code to allow a `QMachineService` instance to
       # be used from the "config.ru" file of a Rack app.
@@ -38,9 +38,7 @@ module QM
     end
 
     def self::launch_service(options = {})
-      # This function creates, configures, and launches a fresh Sinatra app
-      # that inherits from the original "teaching version". There is probably
-      # a prettier way to do this, but this works fine for right now.
+      # This function launches a new app using Unicorn :-)
         require 'unicorn'
         app = self::create_app(options)
         Unicorn::HttpServer.new(app, {
