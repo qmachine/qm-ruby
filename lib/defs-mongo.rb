@@ -12,7 +12,7 @@ module Sinatra
 
     module MongoConnect
 
-        def connect_api_store(opts = {})
+        def connect_api_store(opts = settings.persistent_storage)
           # This helper function needs documentation.
             db = Mongo::MongoClient.from_uri(opts[:mongo]).db
             db.collection('avars').ensure_index({
@@ -27,7 +27,7 @@ module Sinatra
             return db
         end
 
-        def connect_log_store(opts = {})
+        def connect_log_store(opts = settings.trafficlog_storage)
           # This helper function needs documentation.
             if opts.has_key?(:mongo) then
                 return Mongo::MongoClient.from_uri(opts[:mongo]).db
@@ -105,7 +105,7 @@ module Sinatra
     module MongoLogDefs
 
         def log_to_db()
-          # This method needs documentation.
+          # This helper function needs documentation.
             settings.log_db.collection('traffic').insert({
                 host:           request.host,
                 ip:             request.ip,

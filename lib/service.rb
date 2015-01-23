@@ -18,10 +18,9 @@
 #                                                       ~~ (c) SRW, 24 Apr 2013
 #                                                   ~~ last updated 22 Jan 2015
 
+require 'defs-mongo'
 require 'sinatra'
 require 'sinatra/cross_origin'
-
-require 'defs-mongo'
 
 class QMachineService < Sinatra::Base
 
@@ -36,41 +35,31 @@ class QMachineService < Sinatra::Base
 
       # QMachine options
 
-        set avar_ttl:               86400, # seconds (24 * 60 * 60 = 1 day)
-            enable_api_server:      false,
-            enable_cors:            false,
-            enable_web_server:      false,
-            hostname:               '0.0.0.0',
-            max_body_size:          65536, # bytes (64 * 1024 = 64 KB)
-            persistent_storage:     {},
-            port:                   8177,
-            public_folder:          'public',
-            trafficlog_storage:     {},
-            worker_procs:           1
+        set avar_ttl:           86400, # seconds (24 * 60 * 60 = 1 day)
+            enable_api_server:  false,
+            enable_cors:        false,
+            enable_web_server:  false,
+            hostname:           '0.0.0.0',
+            max_body_size:      65536, # bytes (64 * 1024 = 64 KB)
+            persistent_storage: {},
+            port:               8177,
+            public_folder:      'public',
+            trafficlog_storage: {},
+            worker_procs:       1
 
       # Sinatra mappings and options needed by QMachine
 
-        mime_type webapp: 'application/x-web-app-manifest+json'
+        mime_type webapp:       'application/x-web-app-manifest+json'
 
-        set api_db: lambda {
-                connect_api_store(settings.persistent_storage)
-            },
-            bind: lambda {
-                settings.hostname
-            },
-            log_db: lambda {
-                connect_log_store(settings.trafficlog_storage)
-            },
-            logging: lambda {
-                settings.log_db.nil?
-            },
-            raise_errors: false,
-            run: false,
-            show_exceptions: false,
-            static: lambda {
-                settings.enable_web_server
-            },
-            x_cascade: false
+        set api_db:             lambda { connect_api_store },
+            bind:               lambda { settings.hostname },
+            log_db:             lambda { connect_log_store },
+            logging:            lambda { settings.log_db.nil? },
+            raise_errors:       false,
+            run:                false,
+            show_exceptions:    false,
+            static:             lambda { settings.enable_web_server },
+            x_cascade:          false
 
       # See also: http://www.sinatrarb.com/configuration.html
 
