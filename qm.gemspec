@@ -4,6 +4,10 @@
 #                                                       ~~ (c) SRW, 12 Apr 2013
 #                                                   ~~ last updated 23 Jan 2015
 
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'qm'
+
 Gem::Specification.new do |spec|
 
     spec.author = 'Sean Wilkinson'
@@ -38,9 +42,11 @@ Gem::Specification.new do |spec|
 
     spec.name = 'qm'
 
+    spec.platform = Gem::Platform::RUBY
+
     spec.summary = %q{QMachine: A platform for World Wide Computing}
 
-    spec.version = '1.2.2'
+    spec.version = QM::VERSION
 
   # Specify dependencies
 

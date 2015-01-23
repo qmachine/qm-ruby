@@ -2,7 +2,7 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 22 Jan 2015
+#                                                   ~~ last updated 23 Jan 2015
 
 module QM
 
@@ -51,6 +51,13 @@ module QM
         }).start.join
         return
     end
+
+    def self::version()
+      # This function exists because it exists in the Node.js version.
+        return VERSION
+    end
+
+    VERSION = '1.2.2'
 
 end
 
