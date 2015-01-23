@@ -52,6 +52,25 @@ module QM
         return
     end
 
+=begin
+    def self::launch_service(options = {})
+      # This function launches a new app using Puma. I would prefer to use Puma
+      # instead of Unicorn in the future, in order to support as many of the
+      # different Ruby platforms as possible, but that's not the main priority
+      # for this "teaching version" anyway. Puma will teach *me* a lot about
+      # concurrency in the meantime :-)
+        require 'puma'
+        app = self::create_app(options)
+        server = Puma::Server.new(app)
+        server.add_tcp_listener(app.settings.hostname, app.settings.port)
+        server.min_threads = 1
+        server.max_threads = 16
+        puts "QM up -> http://#{app.settings.hostname}:#{app.settings.port} ..."
+        server.run.join
+        return
+    end
+=end
+
     def self::version()
       # This function exists because it exists in the Node.js version.
         return VERSION

@@ -54,6 +54,7 @@ Gem::Specification.new do |spec|
     spec.add_runtime_dependency('json', '1.8.2')
     spec.add_runtime_dependency('httparty', '0.13.3')
     spec.add_runtime_dependency('mongo', '1.11.1')
+    #spec.add_runtime_dependency('puma', '2.11.0')
     spec.add_runtime_dependency('sinatra', '1.4.5')
     spec.add_runtime_dependency('sinatra-cross_origin', '0.3.2')
     spec.add_runtime_dependency('unicorn', '4.8.3')
