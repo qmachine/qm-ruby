@@ -19,7 +19,7 @@
 #                                                   ~~ last updated 23 Jan 2015
 
 require 'qm/defs-mongo'
-require 'sinatra'
+require 'sinatra/base'
 require 'sinatra/cross_origin'
 
 class QMachineService < Sinatra::Base
