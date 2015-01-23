@@ -2,7 +2,7 @@
 
 #-  qm.gemspec ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 22 Jan 2015
+#                                                   ~~ last updated 23 Jan 2015
 
 Gem::Specification.new do |spec|
 
@@ -22,10 +22,10 @@ Gem::Specification.new do |spec|
     ]
 
     spec.files = [
-        'lib/client.rb',
-        'lib/defs-mongo.rb',
+        'lib/qm/client.rb',
+        'lib/qm/defs-mongo.rb',
         'lib/qm.rb',
-        'lib/service.rb'
+        'lib/qm/service.rb'
     ]
 
     spec.homepage = 'https://www.qmachine.org'

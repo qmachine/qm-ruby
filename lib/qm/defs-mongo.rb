@@ -56,6 +56,7 @@ module Sinatra
                 },
                 upsert: false
             })
+            settings.api_db.connection.close
             return (x.nil?) ? '{}' : x['body']
         end
 
@@ -76,6 +77,7 @@ module Sinatra
               # This block needs documentation.
                 x.push(doc['key'])
             end
+            settings.api_db.connection.close
             return (x.length == 0) ? '[]' : x.to_json
         end
 
@@ -97,6 +99,7 @@ module Sinatra
                 key: params[1]
             }
             settings.api_db.collection('avars').update(query, doc, opts)
+            settings.api_db.connection.close
             return
         end
 
@@ -114,6 +117,7 @@ module Sinatra
                 timestamp:      Time.now,
                 url:            request.fullpath
             })
+            settings.log_db.connection.close
             return
         end
 

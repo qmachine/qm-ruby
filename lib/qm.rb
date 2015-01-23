@@ -11,7 +11,7 @@ module QM
       # from the original "teaching version". This code is separated from the
       # `launch_service` method's code to allow a `QMachineService` instance to
       # be used from the "config.ru" file of a Rack app.
-        require 'service'
+        require 'qm/service'
         app = Sinatra.new(QMachineService) do
             configure do
                 convert = lambda do |x|
@@ -33,7 +33,7 @@ module QM
 
     def self::launch_client(options = {mothership: 'https://api.qmachine.org'})
       # This function needs documentation.
-        require 'client'
+        require 'qm/client'
         return QMachineClient.new(options)
     end
 
