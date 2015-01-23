@@ -48,21 +48,21 @@ class QMachineService < Sinatra::Base
             trafficlog_storage:     {},
             worker_procs:           1
 
-      # Sinatra mappings and options needed by QMachine.
+      # Sinatra mappings and options needed by QMachine
 
         mime_type webapp: 'application/x-web-app-manifest+json'
 
         set api_db: lambda {
-                mongo_api_connect(settings.persistent_storage[:mongo])
+                connect_api_store(settings.persistent_storage)
             },
             bind: lambda {
                 settings.hostname
             },
             log_db: lambda {
-                mongo_log_connect(settings.trafficlog_storage[:mongo])
+                connect_log_store(settings.trafficlog_storage)
             },
             logging: lambda {
-                settings.trafficlog_storage.has_key?(:mongo) == false
+                settings.log_db.nil?
             },
             raise_errors: false,
             run: false,

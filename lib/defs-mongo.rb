@@ -1,5 +1,5 @@
 #-  Ruby source code
-#
+
 #-  defs-mongo.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
 #                                                   ~~ last updated 22 Jan 2015
@@ -12,9 +12,9 @@ module Sinatra
 
     module MongoConnect
 
-        def mongo_api_connect(connection_string)
+        def connect_api_store(opts = {})
           # This helper function needs documentation.
-            db = Mongo::MongoClient.from_uri(connection_string).db
+            db = Mongo::MongoClient.from_uri(opts[:mongo]).db
             db.collection('avars').ensure_index({
                 box: Mongo::ASCENDING,
                 key: Mongo::ASCENDING
@@ -27,9 +27,11 @@ module Sinatra
             return db
         end
 
-        def mongo_log_connect(connection_string)
+        def connect_log_store(opts = {})
           # This helper function needs documentation.
-            return Mongo::MongoClient.from_uri(connection_string).db
+            if opts.has_key?(:mongo) then
+                return Mongo::MongoClient.from_uri(opts[:mongo]).db
+            end
         end
 
     end
