@@ -84,11 +84,6 @@ class QMachineService < Sinatra::Base
           # Unfortunately, closing the connection in this way caused problems
           # in the Node.js implementation, which suggests that this is not the
           # correct solution for all concurrency models ... argh.
-            begin
-                settings.api_db.connection.close
-            rescue Exception => err
-                # ...
-            end
             headers = {'Connection' => 'close', 'Content-Type' => 'text/plain'}
             halt [444, headers, ['']]
         end
