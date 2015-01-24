@@ -2,7 +2,7 @@
 
 #-  defs-mongo.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 23 Jan 2015
+#                                                   ~~ last updated 24 Jan 2015
 
 require 'json'
 require 'mongo'
@@ -78,6 +78,9 @@ module Sinatra
             }
             query = {
                 box: params[0],
+                exp_date: {
+                    '$gt': Time.now
+                },
                 status: params[1]
             }
             x = []
