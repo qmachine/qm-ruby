@@ -2,7 +2,7 @@
 
 #-  defs-mongo.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 22 Jan 2015
+#                                                   ~~ last updated 23 Jan 2015
 
 require 'json'
 require 'mongo'
@@ -39,20 +39,26 @@ module Sinatra
     module MongoAPIDefs
 
         def get_avar(params)
-          # This helper function needs documentation.
+          # This helper function retrieves an avar's representation if it
+          # exists, and it also updates the "expiration date" of the avar in
+          # the database so that data still being used for computations will
+          # not be removed.
             x = settings.api_db.collection('avars').find_and_modify({
+                fields: {
+                    _id: 0,
+                    body: 1
+                },
                 query: {
                     box: params[0],
                     key: params[1]
                 },
                 update: {
+                  # NOTE: The hash below must use `=>` (not `:`) in JRuby, as
+                  # of version 1.7.18, but QM won't be supporting JRuby anyway
+                  # until (a.) JRuby 9000 is stable and (b.) I understand Puma.
                     '$set': {
                         exp_date: Time.now + settings.avar_ttl
                     }
-                },
-                fields: {
-                    _id: 0,
-                    body: 1
                 },
                 upsert: false
             })
@@ -60,7 +66,10 @@ module Sinatra
         end
 
         def get_list(params)
-          # This helper function needs documentation.
+          # This helper function retrieves a list of "key" properties for avars
+          # in the database that have a "status" property, because those are
+          # assumed to represent task descriptions. The function returns the
+          # list as a stringified JSON array in which order is not important.
             opts = {
                 fields: {
                     _id: 0,
@@ -73,14 +82,16 @@ module Sinatra
             }
             x = []
             settings.api_db.collection('avars').find(query, opts).each do |doc|
-              # This block needs documentation.
+              # This block appends each task's key to a running list, but the
+              # the order in which the keys are added is *not* sorted.
                 x.push(doc['key'])
             end
             return (x.length == 0) ? '[]' : x.to_json
         end
 
         def set_avar(params)
-          # This helper function needs documentation.
+          # This helper function writes an avar to the database by "upserting"
+          # a Mongo document that represents it.
             doc = {
                 body: params.last,
                 box: params[0],
@@ -105,7 +116,8 @@ module Sinatra
     module MongoLogDefs
 
         def log_to_db()
-          # This helper function needs documentation.
+          # This helper function inserts a new document into MongoDB after each
+          # request.
             settings.log_db.collection('traffic').insert({
                 host:           request.host,
                 ip:             request.ip,
