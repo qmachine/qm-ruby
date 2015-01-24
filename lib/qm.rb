@@ -2,11 +2,13 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 23 Jan 2015
+#                                                   ~~ last updated 24 Jan 2015
 
 module QM
 
-    def self::create_app(options = {})
+    VERSION = '1.2.3'
+
+    def create_app(options = {})
       # This function creates and configures a fresh Sinatra app that inherits
       # from the original "teaching version". This code is separated from the
       # `launch_service` method's code to allow a `QMachineService` instance to
@@ -31,16 +33,16 @@ module QM
         return app
     end
 
-    def self::launch_client(options = {mothership: 'https://api.qmachine.org'})
+    def launch_client(options = {mothership: 'https://api.qmachine.org'})
       # This function needs documentation.
         require 'qm/client'
         return QMachineClient.new(options)
     end
 
-    def self::launch_service(options = {})
+    def launch_service(options = {})
       # This function launches a new app using Unicorn :-)
         require 'unicorn'
-        app = self::create_app(options)
+        app = create_app(options)
         Unicorn::HttpServer.new(app, {
             listeners: [
                 app.settings.hostname.to_s + ':' + app.settings.port.to_s
@@ -71,12 +73,15 @@ module QM
     end
 =end
 
-    def self::version()
+    def version()
       # This function exists because it exists in the Node.js version.
         return VERSION
     end
 
-    VERSION = '1.2.3'
+    module_function :create_app
+    module_function :launch_client
+    module_function :launch_service
+    module_function :version
 
 end
 
