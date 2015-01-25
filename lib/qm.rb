@@ -28,6 +28,14 @@ module QM
                 end
                 options = convert.call(options)
                 set options
+              # Here, we explicitly overwrite the lambdas in `QMachineService`
+              # to avoid re-evaluating them for every request later, especially
+              # because this avoids the MongoDB connection bloat problem.
+                set api_db:     connect_api_store
+                set bind:       settings.hostname
+                set log_db:     connect_log_store
+                set logging:    settings.log_db.nil?
+                set static:     settings.enable_web_server
             end
         end
         return app
@@ -44,6 +52,15 @@ module QM
         require 'unicorn'
         app = create_app(options)
         Unicorn::HttpServer.new(app, {
+            before_fork: lambda {|server, worker|
+              # This needs documentation.
+                if (server.app.settings.api_db.respond_to?('connection')) then
+                    server.app.settings.api_db.connection.close
+                end
+                if (server.app.settings.log_db.respond_to?('connection')) then
+                    server.app.settings.log_db.connection.close
+                end
+            },
             listeners: [
                 app.settings.hostname.to_s + ':' + app.settings.port.to_s
             ],

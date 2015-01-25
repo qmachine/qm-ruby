@@ -104,7 +104,8 @@ module Sinatra
             doc['status'] = params[2] if params.length == 4
             opts = {
                 multi: false,
-                upsert: true
+                upsert: true,
+                w: 1
             }
             query = {
                 box: params[0],
@@ -120,14 +121,15 @@ module Sinatra
 
         def log_to_db()
           # This helper function inserts a new document into MongoDB after each
-          # request.
+          # request. Eventually, this function will be replaced by one that
+          # delegates to a custom `log` function like the Node.js version.
             settings.log_db.collection('traffic').insert({
                 host:           request.host,
-                ip:             request.ip,
                 method:         request.request_method,
-                status_code:    response.status,
                 timestamp:      Time.now,
                 url:            request.fullpath
+            }, {
+                w: 0
             })
             return
         end
