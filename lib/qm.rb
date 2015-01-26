@@ -84,7 +84,7 @@ module QM
         server = Puma::Server.new(app)
         server.add_tcp_listener(app.settings.hostname, app.settings.port)
         server.min_threads = 1
-        server.max_threads = 16
+        server.max_threads = 5 * app.settings.worker_procs.to_s.to_i(10)
         puts "QM up -> http://#{app.settings.hostname}:#{app.settings.port} ..."
         server.run.join
         return
