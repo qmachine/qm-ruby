@@ -2,7 +2,7 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 24 Jan 2015
+#                                                   ~~ last updated 26 Jan 2015
 
 module QM
 
@@ -28,14 +28,15 @@ module QM
                 end
                 options = convert.call(options)
                 set options
-              # Here, we explicitly overwrite the lambdas in `QMachineService`
-              # to avoid re-evaluating them for every request later, especially
-              # because this avoids the MongoDB connection bloat problem.
-                set api_db:     connect_api_store
-                set bind:       settings.hostname
-                set log_db:     connect_log_store
-                set logging:    settings.log_db.nil?
-                set static:     settings.enable_web_server
+              # Here, we explicitly evaluate the lambdas in `QMachineService`
+              # and store their output. This avoids re-evaluating them for
+              # every HTTP request later, of course, but the main motivation
+              # is to avoid the MongoDB connection bloat problem.
+                set api_db:     settings.api_db,
+                    bind:       settings.bind,
+                    log_db:     settings.log_db,
+                    logging:    settings.logging,
+                    static:     settings.static
             end
         end
         return app
