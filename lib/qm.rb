@@ -17,19 +17,16 @@ module QM
         convert = lambda do |x|
           # This converts all keys in a hash to symbols recursively.
             if x.is_a?(Hash) then
-                x = x.inject({}) do |memo, (k, v)|
-                    memo[k.to_sym] = convert.call(v)
-                    memo
-                end
+                x = x.inject({}) {|y, (k, v)| y[k.to_sym] = convert.call(v); y}
             end
             return x
         end
         app.settings.set(convert.call(options))
         app.settings.set({
-          # Here, we explicitly evaluate the lambdas in `QMachineService` and
-          # store their output. This avoids re-evaluating them for every HTTP
-          # request later, of course, but the main motivation is to avoid the
-          # MongoDB connection bloat problem.
+          # Explicitly evaluate the lambdas in `QMachineService` and store the
+          # outputs. This avoids re-evaluating them for every HTTP request
+          # later, of course, but the main motivation is to avoid the MongoDB
+          # connection bloat problem.
             api_db:     app.settings.api_db,
             bind:       app.settings.bind,
             log_db:     app.settings.log_db,
