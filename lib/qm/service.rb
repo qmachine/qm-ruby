@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 23 Jan 2015
+#                                                   ~~ last updated 27 Jan 2015
 
 require 'qm/defs-mongo'
 require 'sinatra/base'
@@ -24,14 +24,13 @@ require 'sinatra/cross_origin'
 
 class QMachineService < Sinatra::Base
 
-    register Sinatra::CrossOrigin
-    register Sinatra::MongoConnect
+    register Sinatra::CrossOrigin, QM::MongoConnectors
 
     configure do
 
       # Helper methods
 
-        helpers Sinatra::MongoAPIDefs, Sinatra::MongoLogDefs
+        helpers QM::MongoStorageHelpers
 
       # QMachine options
 

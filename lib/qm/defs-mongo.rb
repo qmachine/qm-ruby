@@ -2,18 +2,18 @@
 
 #-  defs-mongo.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 24 Jan 2015
+#                                                   ~~ last updated 27 Jan 2015
 
 require 'json'
 require 'mongo'
 require 'sinatra/base'
 
-module Sinatra
+module QM
 
-    module MongoConnect
+    module MongoConnectors
 
         def connect_api_store(opts = settings.persistent_storage)
-          # This helper function needs documentation.
+          # This function needs documentation.
             db = Mongo::MongoClient.from_uri(opts[:mongo]).db
             db.collection('avars').ensure_index({
                 box: Mongo::ASCENDING,
@@ -28,7 +28,7 @@ module Sinatra
         end
 
         def connect_log_store(opts = settings.trafficlog_storage)
-          # This helper function needs documentation.
+          # This function needs documentation.
             if opts.has_key?(:mongo) then
                 return Mongo::MongoClient.from_uri(opts[:mongo]).db
             end
@@ -36,7 +36,7 @@ module Sinatra
 
     end
 
-    module MongoAPIDefs
+    module MongoStorageHelpers
 
         def get_avar(params)
           # This helper function retrieves an avar's representation if it
@@ -92,6 +92,21 @@ module Sinatra
             return (x.length == 0) ? '[]' : x.to_json
         end
 
+        def log_to_db()
+          # This helper function inserts a new document into MongoDB after each
+          # request. Eventually, this function will be replaced by one that
+          # delegates to a custom `log` function like the Node.js version.
+            settings.log_db.collection('traffic').insert({
+                host:           request.host,
+                method:         request.request_method,
+                timestamp:      Time.now,
+                url:            request.fullpath
+            }, {
+                w: 0
+            })
+            return
+        end
+
         def set_avar(params)
           # This helper function writes an avar to the database by "upserting"
           # a Mongo document that represents it.
@@ -117,27 +132,8 @@ module Sinatra
 
     end
 
-    module MongoLogDefs
-
-        def log_to_db()
-          # This helper function inserts a new document into MongoDB after each
-          # request. Eventually, this function will be replaced by one that
-          # delegates to a custom `log` function like the Node.js version.
-            settings.log_db.collection('traffic').insert({
-                host:           request.host,
-                method:         request.request_method,
-                timestamp:      Time.now,
-                url:            request.fullpath
-            }, {
-                w: 0
-            })
-            return
-        end
-
-    end
-
-    helpers MongoAPIDefs, MongoLogDefs
-    register MongoConnect
+    Sinatra.helpers MongoStorageHelpers
+    Sinatra.register MongoConnectors
 
 end
 
