@@ -1,6 +1,9 @@
 #-  Ruby source code
 
 #-  defs-mongo.rb ~~
+#
+#   See http://www.sinatrarb.com/extensions.html.
+#
 #                                                       ~~ (c) SRW, 16 Jul 2014
 #                                                   ~~ last updated 27 Jan 2015
 
