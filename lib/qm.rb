@@ -24,18 +24,18 @@ module QM
             end
             return x
         end
-        convert.call(options).each_pair do |key, val|
-            app.settings.set(key, val)
-        end
-      # Here, we explicitly evaluate the lambdas in `QMachineService` and store
-      # their output. This avoids re-evaluating them for every HTTP request
-      # later, of course, but the main motivation is to avoid the MongoDB
-      # connection bloat problem.
-        app.settings.set(:api_db, app.settings.api_db)
-        app.settings.set(:bind, app.settings.bind)
-        app.settings.set(:log_db, app.settings.log_db)
-        app.settings.set(:logging, app.settings.logging)
-        app.settings.set(:static, app.settings.static)
+        app.settings.set(convert.call(options))
+        app.settings.set({
+          # Here, we explicitly evaluate the lambdas in `QMachineService` and
+          # store their output. This avoids re-evaluating them for every HTTP
+          # request later, of course, but the main motivation is to avoid the
+          # MongoDB connection bloat problem.
+            api_db:     app.settings.api_db,
+            bind:       app.settings.bind,
+            log_db:     app.settings.log_db,
+            logging:    app.settings.logging,
+            static:     app.settings.static
+        })
         return app
     end
 
