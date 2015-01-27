@@ -8,6 +8,8 @@ module QM
 
     VERSION = '1.2.3'
 
+  module_function
+
     def create_app(options = {})
       # This function creates and configures a fresh app. This code is separate
       # from the `launch_service` method's code to allow direct use of a
@@ -70,11 +72,6 @@ module QM
       # This function exists because it exists in the Node.js version.
         return VERSION
     end
-
-    module_function :create_app
-    module_function :launch_client
-    module_function :launch_service
-    module_function :version
 
 end
 
