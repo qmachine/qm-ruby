@@ -12,6 +12,8 @@ module QM
 
     module MongoConnectors
 
+      # These functions extend Sinatra's DSL (class) context.
+
         def connect_api_store(opts = settings.persistent_storage)
           # This function needs documentation.
             db = Mongo::MongoClient.from_uri(opts[:mongo]).db
@@ -37,6 +39,8 @@ module QM
     end
 
     module MongoStorageHelpers
+
+      # These function extend Sinatra's Request context.
 
         def get_avar(params)
           # This helper function retrieves an avar's representation if it
