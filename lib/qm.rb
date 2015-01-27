@@ -2,43 +2,40 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 26 Jan 2015
+#                                                   ~~ last updated 27 Jan 2015
 
 module QM
 
     VERSION = '1.2.3'
 
     def create_app(options = {})
-      # This function creates and configures a fresh Sinatra app that inherits
-      # from the original "teaching version". This code is separated from the
-      # `launch_service` method's code to allow a `QMachineService` instance to
-      # be used from the "config.ru" file of a Rack app.
+      # This function creates and configures a fresh app. This code is separate
+      # from the `launch_service` method's code to allow direct use of a
+      # `QMachineService` instance from within a Rackup file ("config.ru").
         require 'qm/service'
-        app = Sinatra.new(QMachineService) do
-            configure do
-                convert = lambda do |x|
-                  # This converts all keys in a hash to symbols recursively.
-                    if x.is_a?(Hash) then
-                        x = x.inject({}) do |memo, (k, v)|
-                            memo[k.to_sym] = convert.call(v)
-                            memo
-                        end
-                    end
-                    return x
+        app = QMachineService.new
+        convert = lambda do |x|
+          # This converts all keys in a hash to symbols recursively.
+            if x.is_a?(Hash) then
+                x = x.inject({}) do |memo, (k, v)|
+                    memo[k.to_sym] = convert.call(v)
+                    memo
                 end
-                options = convert.call(options)
-                set options
-              # Here, we explicitly evaluate the lambdas in `QMachineService`
-              # and store their output. This avoids re-evaluating them for
-              # every HTTP request later, of course, but the main motivation
-              # is to avoid the MongoDB connection bloat problem.
-                set api_db:     settings.api_db,
-                    bind:       settings.bind,
-                    log_db:     settings.log_db,
-                    logging:    settings.logging,
-                    static:     settings.static
             end
+            return x
         end
+        convert.call(options).each_pair do |key, val|
+            app.settings.set(key, val)
+        end
+      # Here, we explicitly evaluate the lambdas in `QMachineService` and store
+      # their output. This avoids re-evaluating them for every HTTP request
+      # later, of course, but the main motivation is to avoid the MongoDB
+      # connection bloat problem.
+        app.settings.set(:api_db, app.settings.api_db)
+        app.settings.set(:bind, app.settings.bind)
+        app.settings.set(:log_db, app.settings.log_db)
+        app.settings.set(:logging, app.settings.logging)
+        app.settings.set(:static, app.settings.static)
         return app
     end
 
