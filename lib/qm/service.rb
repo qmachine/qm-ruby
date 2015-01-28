@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 27 Jan 2015
+#                                                   ~~ last updated 28 Jan 2015
 
 require 'qm/storage'
 require 'sinatra/base'
@@ -115,6 +115,8 @@ class QMachineService < Sinatra::Base
   # Filter definitions
 
     after do
+      # After every successful request, if logging to stdout has been disabled,
+      # write a new entry into the traffic log database.
         log_to_db unless response.status == 444 or settings.logging == true
     end
 
