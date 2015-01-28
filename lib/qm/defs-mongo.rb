@@ -18,17 +18,19 @@ module QM
 
         def connect_api_store(opts = settings.persistent_storage)
           # This function needs documentation.
-            db = Mongo::MongoClient.from_uri(opts[:mongo]).db
-            db.collection('avars').ensure_index({
-                box: Mongo::ASCENDING,
-                key: Mongo::ASCENDING
-            }, {
-                unique: true
-            })
-            db.collection('avars').ensure_index('exp_date', {
-                expireAfterSeconds: 0
-            })
-            return db
+            if (opts.has_key?(:mongo)) then
+                db = Mongo::MongoClient.from_uri(opts[:mongo]).db
+                db.collection('avars').ensure_index({
+                    box: Mongo::ASCENDING,
+                    key: Mongo::ASCENDING
+                }, {
+                    unique: true
+                })
+                db.collection('avars').ensure_index('exp_date', {
+                    expireAfterSeconds: 0
+                })
+                return db
+            end
         end
 
         def connect_log_store(opts = settings.trafficlog_storage)
