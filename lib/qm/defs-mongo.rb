@@ -5,7 +5,7 @@
 #   See http://www.sinatrarb.com/extensions.html.
 #
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 27 Jan 2015
+#                                                   ~~ last updated 28 Jan 2015
 
 require 'json'
 require 'mongo'
@@ -18,7 +18,7 @@ module QM
 
         def connect_api_store(opts = settings.persistent_storage)
           # This function needs documentation.
-            if (opts.has_key?(:mongo)) then
+            if opts.has_key?(:mongo) then
                 db = Mongo::MongoClient.from_uri(opts[:mongo]).db
                 db.collection('avars').ensure_index({
                     box: Mongo::ASCENDING,
