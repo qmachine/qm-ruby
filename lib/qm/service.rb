@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 28 Jan 2015
+#                                                   ~~ last updated 27 Jan 2015
 
 require 'qm/storage'
 require 'sinatra/base'
@@ -32,9 +32,24 @@ class QMachineService < Sinatra::Base
 
         helpers QM::StorageHelpers
 
-      # QMachine options
+      # MIME types that may be missing
 
-        set avar_ttl:           86400, # seconds (24 * 60 * 60 = 1 day)
+        mime_type({
+            webapp:             'application/x-web-app-manifest+json'
+        })
+
+      # QMachine definitions
+
+        qm_lazy = {
+            api_db:             lambda { connect_api_store },
+            bind:               lambda { settings.hostname },
+            log_db:             lambda { connect_log_store },
+            logging:            lambda { settings.log_db.nil? },
+            static:             lambda { settings.enable_web_server }
+        }
+
+        qm_options = {
+            avar_ttl:           86400, # seconds (24 * 60 * 60 = 1 day)
             enable_api_server:  false,
             enable_cors:        false,
             enable_web_server:  false,
@@ -45,22 +60,25 @@ class QMachineService < Sinatra::Base
             public_folder:      'public',
             trafficlog_storage: {},
             worker_procs:       1
+        }
 
-      # Sinatra mappings and options needed by QMachine
+      # Save the configuration :-)
 
-        mime_type webapp:       'application/x-web-app-manifest+json'
+        set(qm_lazy.merge(qm_options).merge({
 
-        set api_db:             lambda { connect_api_store },
-            bind:               lambda { settings.hostname },
-            log_db:             lambda { connect_log_store },
-            logging:            lambda { settings.log_db.nil? },
+          # The first two entries here are needed by `QM.create_app`.
+
+            qm_lazy:            qm_lazy.keys,
+            qm_options:         qm_options.keys,
+
+          # The rest are Rack / Sinatra mappings.
+
             raise_errors:       false,
             run:                false,
             show_exceptions:    false,
-            static:             lambda { settings.enable_web_server },
             x_cascade:          false
 
-      # See also: http://www.sinatrarb.com/configuration.html
+        }))
 
     end
 

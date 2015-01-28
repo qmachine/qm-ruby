@@ -2,7 +2,7 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 27 Jan 2015
+#                                                   ~~ last updated 28 Jan 2015
 
 module QM
 
@@ -15,26 +15,35 @@ module QM
       # from the `launch_service` method's code to allow direct use of a
       # `QMachineService` instance from within a Rackup file ("config.ru").
         require 'qm/service'
-        app = QMachineService.new
-        convert = lambda do |x|
-          # This converts all keys in a hash to symbols recursively.
-            if x.is_a?(Hash) then
-                x = x.inject({}) {|y, (k, v)| y[k.to_sym] = convert.call(v); y}
+        app = Sinatra.new(QMachineService) do
+            configure do
+                convert = lambda do |x|
+                  # This converts all keys in a hash to symbols recursively.
+                    if x.is_a?(Hash) then
+                        x = x.inject({}) do |y, (key, val)|
+                            y[key.to_sym] = convert.call(val); y
+                        end
+                    end
+                    return x
+                end
+                convert.call(options).each_pair do |key, val|
+                  # This provides feedback for user-specified options.
+                    if settings.qm_options.include?(key) then
+                        set(key, val)
+                    else
+                        STDERR.puts "Unknown option: #{key}"
+                    end
+                end
+                settings.qm_lazy.each do |key|
+                  # Eagerly evaluate the lambdas in `QMachineService` in the
+                  # correct scope and store their outputs. This strategy avoids
+                  # re-evaluating them for every HTTP request later, of course,
+                  # but the main motivation is to avoid endlessly opening new
+                  # connections without closing old ones.
+                    set(key, settings.send(key))
+                end
             end
-            return x
         end
-        app.settings.set(convert.call(options))
-        app.settings.set({
-          # Explicitly evaluate the lambdas in `QMachineService` and store the
-          # outputs. This avoids re-evaluating them for every HTTP request
-          # later, of course, but the main motivation is to avoid the MongoDB
-          # connection bloat problem.
-            api_db:     app.settings.api_db,
-            bind:       app.settings.bind,
-            log_db:     app.settings.log_db,
-            logging:    app.settings.logging,
-            static:     app.settings.static
-        })
         return app
     end
 
