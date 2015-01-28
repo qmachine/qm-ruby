@@ -18,19 +18,19 @@
 #                                                       ~~ (c) SRW, 24 Apr 2013
 #                                                   ~~ last updated 27 Jan 2015
 
-require 'qm/defs-mongo'
+require 'qm/storage'
 require 'sinatra/base'
 require 'sinatra/cross_origin'
 
 class QMachineService < Sinatra::Base
 
-    register Sinatra::CrossOrigin, QM::MongoConnectors
+    register Sinatra::CrossOrigin, QM::StorageConnectors
 
     configure do
 
       # Helper methods
 
-        helpers QM::MongoStorageHelpers
+        helpers QM::StorageHelpers
 
       # QMachine options
 

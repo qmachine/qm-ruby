@@ -9,7 +9,6 @@
 
 require 'json'
 require 'mongo'
-require 'sinatra/base'
 
 module QM
 
@@ -41,7 +40,7 @@ module QM
 
     end
 
-    module MongoStorageHelpers
+    module MongoHelpers
 
       # These function extend Sinatra's Request context.
 
@@ -138,9 +137,6 @@ module QM
         end
 
     end
-
-    Sinatra.helpers MongoStorageHelpers
-    Sinatra.register MongoConnectors
 
 end
 
