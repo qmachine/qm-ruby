@@ -5,7 +5,7 @@
 #   See http://www.sinatrarb.com/extensions.html.
 #
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 28 Jan 2015
+#                                                   ~~ last updated 29 Jan 2015
 
 require 'json'
 require 'mongo'
@@ -16,28 +16,26 @@ module QM
 
       # These functions extend Sinatra's DSL (class) context.
 
+        module_function
+
         def connect_api_store(opts = settings.persistent_storage)
           # This function needs documentation.
-            if opts.has_key?(:mongo) then
-                db = Mongo::MongoClient.from_uri(opts[:mongo]).db
-                db.collection('avars').ensure_index({
-                    box: Mongo::ASCENDING,
-                    key: Mongo::ASCENDING
-                }, {
-                    unique: true
-                })
-                db.collection('avars').ensure_index('exp_date', {
-                    expireAfterSeconds: 0
-                })
-                return db
-            end
+            db = Mongo::MongoClient.from_uri(opts[:mongo]).db
+            db.collection('avars').ensure_index({
+                box: Mongo::ASCENDING,
+                key: Mongo::ASCENDING
+            }, {
+                unique: true
+            })
+            db.collection('avars').ensure_index('exp_date', {
+                expireAfterSeconds: 0
+            })
+            return db
         end
 
         def connect_log_store(opts = settings.trafficlog_storage)
           # This function needs documentation.
-            if opts.has_key?(:mongo) then
-                return Mongo::MongoClient.from_uri(opts[:mongo]).db
-            end
+            return Mongo::MongoClient.from_uri(opts[:mongo]).db
         end
 
     end
