@@ -5,10 +5,7 @@
 #   See http://www.sinatrarb.com/extensions.html.
 #
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 29 Jan 2015
-
-require 'json'
-require 'mongo'
+#                                                   ~~ last updated 30 Jan 2015
 
 module QM
 
@@ -92,6 +89,8 @@ module QM
 
         def initialize(opts = {})
           # This constructor needs documentation.
+            require 'json'
+            require 'mongo'
             @settings = opts
         end
 
@@ -138,6 +137,7 @@ module QM
 
         def initialize(opts = {})
           # This constructor needs documentation.
+            require 'mongo'
             @settings = opts
         end
 
