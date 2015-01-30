@@ -2,7 +2,7 @@
 
 #-  storage.rb ~~
 #                                                       ~~ (c) SRW, 27 Jan 2015
-#                                                   ~~ last updated 29 Jan 2015
+#                                                   ~~ last updated 30 Jan 2015
 
 require 'qm/defs-mongo'
 require 'sinatra/base'
@@ -15,13 +15,12 @@ module QM
           # This is the constructor.
             if opts.persistent_storage.has_key?(:mongo) then
                 @db = MongoApiStore.new(opts)
-            end
-            @db.connect(opts.persistent_storage) if not @db.nil?
+            @db.connect(opts.persistent_storage) unless @db.nil?
         end
 
         def method_missing(method, *args, &block)
           # This function needs documentation.
-            return @db.send(method, *args, &block) if not @db.nil?
+            return @db.send(method, *args, &block) unless @db.nil?
         end
 
     end
@@ -33,12 +32,12 @@ module QM
             if opts.trafficlog_storage.has_key?(:mongo) then
                 @db = MongoLogStore.new(opts)
             end
-            @db.connect(opts.trafficlog_storage) if not @db.nil?
+            @db.connect(opts.trafficlog_storage) unless @db.nil?
         end
 
         def method_missing(method, *args, &block)
           # This function needs documentation.
-            return @db.send(method, *args, &block) if not @db.nil?
+            return @db.send(method, *args, &block) unless @db.nil?
         end
 
     end
