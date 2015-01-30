@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 28 Jan 2015
+#                                                   ~~ last updated 29 Jan 2015
 
 require 'qm/storage'
 require 'sinatra/base'
@@ -24,13 +24,9 @@ require 'sinatra/cross_origin'
 
 class QMachineService < Sinatra::Base
 
-    register Sinatra::CrossOrigin, QM::StorageConnectors
+    register Sinatra::CrossOrigin, QM::StorageConnector
 
     configure do
-
-      # Helper methods
-
-        helpers QM::StorageHelpers
 
       # MIME types that may be missing
 
@@ -105,6 +101,11 @@ class QMachineService < Sinatra::Base
             halt [444, headers, ['']]
         end
 
+        def log_to_db()
+          # This helper function needs documentation.
+            settings.log_db.log(request)
+        end
+
     end
 
     not_found do
@@ -141,10 +142,10 @@ class QMachineService < Sinatra::Base
       # such as when checking for new tasks to run or downloading results.
         if @key.is_a?(String) then
           # This arm runs when a client requests the value of a specific avar.
-            y = get_avar([@box, @key])
+            y = settings.api_db.get_avar([@box, @key])
         else
           # This arm runs when a client requests a task queue.
-            y = get_list([@box, @status])
+            y = settings.api_db.get_list([@box, @status])
         end
         return [200, {'Content-Type' => 'application/json'}, [y]]
     end
@@ -164,10 +165,10 @@ class QMachineService < Sinatra::Base
           # This arm runs only when a client writes an avar which represents a
           # task description.
             hang_up unless x['status'].match(/^[\w\-]+$/)
-            set_avar([@box, @key, x['status'], body])
+            settings.api_db.set_avar([@box, @key, x['status'], body])
         else
           # This arm runs when a client is writing a "regular avar".
-            set_avar([@box, @key, body])
+            settings.api_db.set_avar([@box, @key, body])
         end
         return [201, {'Content-Type' => 'text/plain'}, ['']]
     end

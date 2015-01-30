@@ -12,44 +12,48 @@ require 'mongo'
 
 module QM
 
-    module MongoConnectors
-
-      # These functions extend Sinatra's DSL (class) context.
+    module MongoStorage
 
         module_function
 
-        def connect_api_store(opts = settings.persistent_storage)
+        def close()
           # This function needs documentation.
-            db = Mongo::MongoClient.from_uri(opts[:mongo]).db
-            db.collection('avars').ensure_index({
+            @api_db.connection.close if @api_db.respond_to?('connection')
+            @log_db.connection.close if @log_db.respond_to?('connection')
+            return
+        end
+
+        def connect_api_store(opts = {})
+          # This function needs documentation.
+            connection_string = opts.persistent_storage[:mongo]
+            @api_db ||= Mongo::MongoClient.from_uri(connection_string).db
+            @api_db.collection('avars').ensure_index({
                 box: Mongo::ASCENDING,
                 key: Mongo::ASCENDING
             }, {
                 unique: true
             })
-            db.collection('avars').ensure_index('exp_date', {
+            @api_db.collection('avars').ensure_index('exp_date', {
                 expireAfterSeconds: 0
             })
-            return db
+            @settings = opts
+            return @api_db
         end
 
-        def connect_log_store(opts = settings.trafficlog_storage)
+        def connect_log_store(opts = {})
           # This function needs documentation.
-            return Mongo::MongoClient.from_uri(opts[:mongo]).db
+            connection_string = opts.trafficlog_storage[:mongo]
+            @log_db ||= Mongo::MongoClient.from_uri(connection_string).db
+            @settings = opts
+            return @log_db
         end
-
-    end
-
-    module MongoHelpers
-
-      # These function extend Sinatra's Request context.
 
         def get_avar(params)
           # This helper function retrieves an avar's representation if it
           # exists, and it also updates the "expiration date" of the avar in
           # the database so that data still being used for computations will
           # not be removed.
-            x = settings.api_db.collection('avars').find_and_modify({
+            x = @api_db.collection('avars').find_and_modify({
                 fields: {
                     _id: 0,
                     body: 1
@@ -63,7 +67,7 @@ module QM
                   # of version 1.7.18, but QM won't be supporting JRuby anyway
                   # until (a.) JRuby 9000 is stable and (b.) I understand Puma.
                     '$set': {
-                        exp_date: Time.now + settings.avar_ttl
+                        exp_date: Time.now + @settings.avar_ttl
                     }
                 },
                 upsert: false
@@ -90,7 +94,7 @@ module QM
                 status: params[1]
             }
             x = []
-            settings.api_db.collection('avars').find(query, opts).each do |doc|
+            @api_db.collection('avars').find(query, opts).each do |doc|
               # This block appends each task's key to a running list, but the
               # the order in which the keys are added is *not* sorted.
                 x.push(doc['key'])
@@ -98,11 +102,11 @@ module QM
             return (x.length == 0) ? '[]' : x.to_json
         end
 
-        def log_to_db()
+        def log(request)
           # This helper function inserts a new document into MongoDB after each
           # request. Eventually, this function will be replaced by one that
           # delegates to a custom `log` function like the Node.js version.
-            settings.log_db.collection('traffic').insert({
+            @log_db.collection('traffic').insert({
                 host:           request.host,
                 method:         request.request_method,
                 timestamp:      Time.now,
@@ -119,7 +123,7 @@ module QM
             doc = {
                 body: params.last,
                 box: params[0],
-                exp_date: Time.now + settings.avar_ttl,
+                exp_date: Time.now + @settings.avar_ttl,
                 key: params[1]
             }
             doc['status'] = params[2] if params.length == 4
@@ -132,7 +136,7 @@ module QM
                 box: params[0],
                 key: params[1]
             }
-            settings.api_db.collection('avars').update(query, doc, opts)
+            @api_db.collection('avars').update(query, doc, opts)
             return
         end
 

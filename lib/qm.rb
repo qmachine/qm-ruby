@@ -60,11 +60,11 @@ module QM
         Unicorn::HttpServer.new(app, {
             before_fork: lambda {|server, worker|
               # This needs documentation.
-                if (server.app.settings.api_db.respond_to?('connection')) then
-                    server.app.settings.api_db.connection.close
+                if (server.app.settings.api_db.respond_to?('close')) then
+                    server.app.settings.api_db.close
                 end
-                if (server.app.settings.log_db.respond_to?('connection')) then
-                    server.app.settings.log_db.connection.close
+                if (server.app.settings.log_db.respond_to?('close')) then
+                    server.app.settings.log_db.close
                 end
             },
             listeners: [
