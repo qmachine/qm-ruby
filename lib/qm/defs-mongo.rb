@@ -12,46 +12,36 @@ require 'mongo'
 
 module QM
 
-    class MongoStore
+    class MongoApiStore
 
         def close()
-          # This function needs documentation.
-            @api_db.connection.close if @api_db.respond_to?('connection')
-            @log_db.connection.close if @log_db.respond_to?('connection')
+          # This method documentation.
+            @db.connection.close if @db.respond_to?('connection')
             return
         end
 
-        def connect_api_store(opts = {})
-          # This function needs documentation.
-            if (opts.has_key?(:mongo)) then
-                @api_db ||= Mongo::MongoClient.from_uri(opts[:mongo]).db
-                @api_db.collection('avars').ensure_index({
+        def connect(opts = {})
+          # This method needs documentation.
+            if opts.has_key?(:mongo) then
+                @db ||= Mongo::MongoClient.from_uri(opts[:mongo]).db
+                @db.collection('avars').ensure_index({
                     box: Mongo::ASCENDING,
                     key: Mongo::ASCENDING
                 }, {
                     unique: true
                 })
-                @api_db.collection('avars').ensure_index('exp_date', {
+                @db.collection('avars').ensure_index('exp_date', {
                     expireAfterSeconds: 0
                 })
             end
-            return @api_db
-        end
-
-        def connect_log_store(opts = {})
-          # This function needs documentation.
-            if (opts.has_key?(:mongo)) then
-                @log_db ||= Mongo::MongoClient.from_uri(opts[:mongo]).db
-            end
-            return @log_db
+            return @db
         end
 
         def get_avar(params)
-          # This helper function retrieves an avar's representation if it
-          # exists, and it also updates the "expiration date" of the avar in
-          # the database so that data still being used for computations will
-          # not be removed.
-            x = @api_db.collection('avars').find_and_modify({
+          # This method retrieves an avar's representation if it exists, and it
+          # also updates the "expiration date" of the avar in the database so
+          # that data still being used for computations will not be removed.
+            x = @db.collection('avars').find_and_modify({
                 fields: {
                     _id: 0,
                     body: 1
@@ -74,10 +64,10 @@ module QM
         end
 
         def get_list(params)
-          # This helper function retrieves a list of "key" properties for avars
-          # in the database that have a "status" property, because those are
-          # assumed to represent task descriptions. The function returns the
-          # list as a stringified JSON array in which order is not important.
+          # This method retrieves a list of "key" properties for avars in the
+          # database that have a "status" property, because those are assumed
+          # to represent task descriptions. The function returns the list as a
+          # stringified JSON array in which order is not important.
             opts = {
                 fields: {
                     _id: 0,
@@ -92,7 +82,7 @@ module QM
                 status: params[1]
             }
             x = []
-            @api_db.collection('avars').find(query, opts).each do |doc|
+            @db.collection('avars').find(query, opts).each do |doc|
               # This block appends each task's key to a running list, but the
               # the order in which the keys are added is *not* sorted.
                 x.push(doc['key'])
@@ -101,28 +91,13 @@ module QM
         end
 
         def initialize(opts = {})
-          # This constructor function needs documentation.
+          # This constructor needs documentation.
             @settings = opts
         end
 
-        def log(request)
-          # This helper function inserts a new document into MongoDB after each
-          # request. Eventually, this function will be replaced by one that
-          # delegates to a custom `log` function like the Node.js version.
-            @log_db.collection('traffic').insert({
-                host:           request.host,
-                method:         request.request_method,
-                timestamp:      Time.now,
-                url:            request.fullpath
-            }, {
-                w: 0
-            })
-            return
-        end
-
         def set_avar(params)
-          # This helper function writes an avar to the database by "upserting"
-          # a Mongo document that represents it.
+          # This method writes an avar to the database by "upserting" a Mongo
+          # document that represents it.
             doc = {
                 body: params.last,
                 box: params[0],
@@ -139,7 +114,45 @@ module QM
                 box: params[0],
                 key: params[1]
             }
-            @api_db.collection('avars').update(query, doc, opts)
+            @db.collection('avars').update(query, doc, opts)
+            return
+        end
+
+    end
+
+    class MongoLogStore
+
+        def close()
+          # This method needs documentation.
+            @db.connection.close if @db.respond_to?('connection')
+            return
+        end
+
+        def connect(opts = {})
+          # This method needs documentation.
+            if (opts.has_key?(:mongo)) then
+                @db ||= Mongo::MongoClient.from_uri(opts[:mongo]).db
+            end
+            return @db
+        end
+
+        def initialize(opts = {})
+          # This constructor needs documentation.
+            @settings = opts
+        end
+
+        def log(request)
+          # This method inserts a new document into MongoDB after each request.
+          # Eventually, this function will be replaced by one that delegates to
+          # a custom `log` function like the Node.js version.
+            @db.collection('traffic').insert({
+                host:           request.host,
+                method:         request.request_method,
+                timestamp:      Time.now,
+                url:            request.fullpath
+            }, {
+                w: 0
+            })
             return
         end
 

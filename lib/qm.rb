@@ -2,13 +2,11 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 29 Jan 2015
+#                                                   ~~ last updated 30 Jan 2015
 
 module QM
 
     VERSION = '1.2.4'
-
-  module_function
 
     def create_app(options = {})
       # This function creates and configures a fresh app. This code is separate
@@ -78,6 +76,8 @@ module QM
       # This function exists because it exists in the Node.js version.
         return VERSION
     end
+
+    module_function :create_app, :launch_client, :launch_service, :version
 
 end
 

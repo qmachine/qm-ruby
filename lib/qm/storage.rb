@@ -13,10 +13,10 @@ module QM
 
         def initialize(opts = {})
           # This is the constructor.
-            if (opts.persistent_storage.has_key?(:mongo)) then
-                @db = MongoStore.new(opts)
+            if opts.persistent_storage.has_key?(:mongo) then
+                @db = MongoApiStore.new(opts)
             end
-            @db.connect_api_store(opts.persistent_storage) if not @db.nil?
+            @db.connect(opts.persistent_storage) if not @db.nil?
         end
 
         def method_missing(method, *args, &block)
@@ -30,10 +30,10 @@ module QM
 
         def initialize(opts = {})
           # This is the constructor.
-            if (opts.trafficlog_storage.has_key?(:mongo)) then
-                @db = MongoStore.new(opts)
+            if opts.trafficlog_storage.has_key?(:mongo) then
+                @db = MongoLogStore.new(opts)
             end
-            @db.connect_log_store(opts.trafficlog_storage) if not @db.nil?
+            @db.connect(opts.trafficlog_storage) if not @db.nil?
         end
 
         def method_missing(method, *args, &block)
@@ -48,13 +48,13 @@ module QM
         def connect_api_store(opts = settings)
           # This function needs documentation.
             @api_db ||= ApiStore.new(opts)
-            return @api_db if @api_db.connect_api_store
+            return @api_db if @api_db.connect
         end
 
         def connect_log_store(opts = settings)
           # This function needs documentation.
             @log_db ||= LogStore.new(opts)
-            return @log_db if @log_db.connect_log_store
+            return @log_db if @log_db.connect
         end
 
     end

@@ -16,58 +16,58 @@
 #   I can reuse the browser client ...
 #
 #                                                       ~~ (c) SRW, 20 Jul 2014
-#                                                   ~~ last updated 17 Nov 2014
+#                                                   ~~ last updated 30 Jan 2015
 
 require 'httparty'
 require 'json'
 
-class QMachineClient
+module QM
 
-    include HTTParty
+    class QMachineClient
 
-    def initialize(options = {mothership: 'https://api.qmachine.org'})
-      # This method runs when Ruby calls `QMachineClient.new`.
-        @ms = options[:mothership]
-        return
-    end
+        include HTTParty
 
-    def get_avar(opts = {})
-      # This method needs documentation.
-        res = self.class.get("#{@ms}/box/#{opts[:box]}?key=#{opts[:key]}")
-        if (res.code != 200) then
-            raise "Error: #{res.code}"
+        def initialize(options = {mothership: 'https://api.qmachine.org'})
+          # This method runs when Ruby calls `QMachineClient.new`.
+            @ms = options[:mothership]
+            return
         end
-        return JSON.parse(res.body)
-    end
 
-    def get_list(opts = {})
-      # This method needs documentation.
-        res = self.class.get("#{@ms}/box/#{opts[:box]}?status=#{opts[:status]}")
-        if (res.code != 200) then
-            raise "Error: #{res.code}"
+        def get_avar(o = {})
+          # This method needs documentation.
+            res = self.class.get("#{@ms}/box/#{o[:box]}?key=#{o[:key]}")
+            raise "Error: #{res.code}" if res.code != 200
+            return JSON.parse(res.body)
         end
-        return JSON.parse(res.body)
-    end
 
-    def set_avar(opts = {})
-      # This method needs documentation.
-        res = self.class.post("#{@ms}/box/#{opts[:box]}?key=#{opts[:key]}", {
-            body: opts.to_json,
-            headers: {'Content-Type' => 'application/json'}
-        })
-        if (res.code != 201) then
-            raise "Error: #{res.code}"
+        def get_list(o = {})
+          # This method needs documentation.
+            res = self.class.get("#{@ms}/box/#{o[:box]}?status=#{o[:status]}")
+            raise "Error: #{res.code}" if res.code != 200
+            return JSON.parse(res.body)
         end
-        return res.body
-    end
 
-    def uuid()
-      # This method needs documentation.
-        y = ''
-        while (y.length < 32) do
-            y += rand.to_s[/[0-9]+(?!.)/].to_i.to_s(16)
+        def set_avar(o = {})
+          # This method needs documentation.
+            res = self.class.post("#{@ms}/box/#{o[:box]}?key=#{o[:key]}", {
+                body: o.to_json,
+                headers: {
+                    'Content-Type' => 'application/json'
+                }
+            })
+            raise "Error: #{res.code}" if res.code != 201
+            return res.body
         end
-        return y.slice(0, 32)
+
+        def uuid()
+          # This method needs documentation.
+            y = ''
+            while (y.length < 32) do
+                y += rand.to_s[/[0-9]+(?!.)/].to_i.to_s(16)
+            end
+            return y.slice(0, 32)
+        end
+
     end
 
 end
