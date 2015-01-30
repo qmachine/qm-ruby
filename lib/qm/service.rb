@@ -24,7 +24,7 @@ require 'sinatra/cross_origin'
 
 class QMachineService < Sinatra::Base
 
-    register Sinatra::CrossOrigin, QM::StorageConnector
+    register Sinatra::CrossOrigin, QM::StorageConnectors
 
     configure do
 

@@ -43,7 +43,7 @@ module QM
 
     end
 
-    module StorageConnector
+    module StorageConnectors
 
         def connect_api_store(opts = settings)
           # This function needs documentation.
@@ -59,7 +59,7 @@ module QM
 
     end
 
-    Sinatra.register StorageConnector
+    Sinatra.register StorageConnectors
 
 end
 
