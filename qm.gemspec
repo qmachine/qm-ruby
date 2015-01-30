@@ -2,7 +2,7 @@
 
 #-  qm.gemspec ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 29 Jan 2015
+#                                                   ~~ last updated 30 Jan 2015
 
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
@@ -25,12 +25,7 @@ Gem::Specification.new do |spec|
         'README.md'
     ]
 
-    spec.files = [
-        'lib/qm/client.rb',
-        'lib/qm/defs-mongo.rb',
-        'lib/qm.rb',
-        'lib/qm/service.rb'
-    ]
+    spec.files = Dir['lib/*.rb'] + Dir['lib/qm/*.rb']
 
     spec.homepage = 'https://www.qmachine.org'
 
