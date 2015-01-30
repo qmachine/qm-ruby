@@ -9,63 +9,36 @@ require 'sinatra/base'
 
 module QM
 
-    class Storage
+    class ApiStore
 
-        def close()
-          # This method needs documentation.
-            if (@settings.persistent_storage.has_key?(:mongo)) then
-                MongoStorage.close
-            end
-            if (@settings.trafficlog_storage.has_key?(:mongo)) then
-                MongoStorage.close
-            end
-        end
-
-        def connect_api_store()
-          # This method needs documentation.
-            if (@settings.persistent_storage.has_key?(:mongo)) then
-                MongoStorage.connect_api_store(@settings)
-            end
-        end
-
-        def connect_log_store()
-          # This method needs documentation.
-            if (@settings.trafficlog_storage.has_key?(:mongo)) then
-                MongoStorage.connect_log_store(@settings)
-            end
-        end
-
-        def get_avar(params)
-          # This method needs documentation.
-            if (@settings.persistent_storage.has_key?(:mongo)) then
-                return MongoStorage.get_avar(params)
-            end
-        end
-
-        def get_list(params)
-          # This method needs documentation.
-            if (@settings.persistent_storage.has_key?(:mongo)) then
-                return MongoStorage.get_list(params)
-            end
-        end
-
-        def initialize(settings = {})
+        def initialize(opts = {})
           # This is the constructor.
-            @settings = settings
+            if (opts.persistent_storage.has_key?(:mongo)) then
+                @db = MongoStore.new(opts)
+            end
+            @db.connect_api_store(opts.persistent_storage) if not @db.nil?
         end
 
-        def log(request)
-          # This method needs documentation.
-            if (@settings.trafficlog_storage.has_key?(:mongo)) then
-                return MongoStorage.log(request)
-            end
+        def method_missing(method, *args, &block)
+          # This function needs documentation.
+            return @db.send(method, *args, &block) if not @db.nil?
         end
 
-        def set_avar(params)
-          # This method needs documentation.
-            if (@settings.persistent_storage.has_key?(:mongo)) then
-                return MongoStorage.set_avar(params)
+    end
+
+    class LogStore
+
+        def initialize(opts = {})
+          # This is the constructor.
+            if (opts.trafficlog_storage.has_key?(:mongo)) then
+                @db = MongoStore.new(opts)
             end
+            @db.connect_log_store(opts.trafficlog_storage) if not @db.nil?
+        end
+
+        def method_missing(method, *args, &block)
+          # This function needs documentation.
+            return @db.send(method, *args, &block) if not @db.nil?
         end
 
     end
@@ -74,14 +47,14 @@ module QM
 
         def connect_api_store(opts = settings)
           # This function needs documentation.
-            @db ||= Storage.new(opts)
-            return @db if @db.connect_api_store
+            @api_db ||= ApiStore.new(opts)
+            return @api_db if @api_db.connect_api_store
         end
 
         def connect_log_store(opts = settings)
           # This function needs documentation.
-            @db ||= Storage.new(opts)
-            return @db if @db.connect_log_store
+            @log_db ||= LogStore.new(opts)
+            return @log_db if @log_db.connect_log_store
         end
 
     end

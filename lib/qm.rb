@@ -2,7 +2,7 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 28 Jan 2015
+#                                                   ~~ last updated 29 Jan 2015
 
 module QM
 
@@ -60,12 +60,9 @@ module QM
         Unicorn::HttpServer.new(app, {
             before_fork: lambda {|server, worker|
               # This needs documentation.
-                if (server.app.settings.api_db.respond_to?('close')) then
-                    server.app.settings.api_db.close
-                end
-                if (server.app.settings.log_db.respond_to?('close')) then
-                    server.app.settings.log_db.close
-                end
+                settings = server.app.settings
+                settings.api_db.close if not settings.api_db.nil?
+                settings.log_db.close if not settings.log_db.nil?
             },
             listeners: [
                 app.settings.hostname.to_s + ':' + app.settings.port.to_s

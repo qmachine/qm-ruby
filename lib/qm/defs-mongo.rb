@@ -12,9 +12,7 @@ require 'mongo'
 
 module QM
 
-    module MongoStorage
-
-        module_function
+    class MongoStore
 
         def close()
           # This function needs documentation.
@@ -25,26 +23,26 @@ module QM
 
         def connect_api_store(opts = {})
           # This function needs documentation.
-            connection_string = opts.persistent_storage[:mongo]
-            @api_db ||= Mongo::MongoClient.from_uri(connection_string).db
-            @api_db.collection('avars').ensure_index({
-                box: Mongo::ASCENDING,
-                key: Mongo::ASCENDING
-            }, {
-                unique: true
-            })
-            @api_db.collection('avars').ensure_index('exp_date', {
-                expireAfterSeconds: 0
-            })
-            @settings = opts
+            if (opts.has_key?(:mongo)) then
+                @api_db ||= Mongo::MongoClient.from_uri(opts[:mongo]).db
+                @api_db.collection('avars').ensure_index({
+                    box: Mongo::ASCENDING,
+                    key: Mongo::ASCENDING
+                }, {
+                    unique: true
+                })
+                @api_db.collection('avars').ensure_index('exp_date', {
+                    expireAfterSeconds: 0
+                })
+            end
             return @api_db
         end
 
         def connect_log_store(opts = {})
           # This function needs documentation.
-            connection_string = opts.trafficlog_storage[:mongo]
-            @log_db ||= Mongo::MongoClient.from_uri(connection_string).db
-            @settings = opts
+            if (opts.has_key?(:mongo)) then
+                @log_db ||= Mongo::MongoClient.from_uri(opts[:mongo]).db
+            end
             return @log_db
         end
 
@@ -100,6 +98,11 @@ module QM
                 x.push(doc['key'])
             end
             return (x.length == 0) ? '[]' : x.to_json
+        end
+
+        def initialize(opts = {})
+          # This constructor function needs documentation.
+            @settings = opts
         end
 
         def log(request)
