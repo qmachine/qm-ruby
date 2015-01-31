@@ -14,8 +14,7 @@ module QM
         def close()
           # This method isn't meaningful for the current implementation because
           # the `execute` method opens and closes the SQLite database file for
-          # each and every request. If you want high performance, do *NOT* use
-          # SQLite as storage for QMachine :-P
+          # each and every request.
             return
         end
 
@@ -94,17 +93,26 @@ module QM
         end
 
         def execute(query)
-          # This helper method helps DRY out the code for database queries.
+          # This helper method helps DRY out the code for database queries. The
+          # `SQLite3::BusyException` is raised so often that the cleanest
+          # solution is to loop until the query succeeds. The reason it occurs
+          # so frequently is because SQLite uses file-level locking, and thus
+          # it is not actually a good choice for an application like QMachine
+          # with such a high frequency of reads and writes.
             done = false
             until (done == true) do
                 begin
                     db = SQLite3::Database.open(@filename)
                     x = db.execute(query)
                     done = true
+                rescue SQLite3::BusyException
+                  # Do nothing here, because we *expect* this to happen a lot,
+                  # especially as the number of `worker_procs` increases.
                 rescue SQLite3::Exception => err
-                    if (err.is_a?(SQLite3::BusyException) == false) then
-                        STDERR.puts "Exception occurred: '#{err}':\n#{query}"
-                    end
+                  # Print unexpected errors to stderr, but don't halt the loop.
+                  # We will just hope that the errors are temporary, because if
+                  # they aren't, the code will be stuck in an infinite loop :-(
+                    STDERR.puts "Exception occurred: '#{err}':\n#{query}"
                 ensure
                     db.close if db
                 end
