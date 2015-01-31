@@ -4,6 +4,9 @@
 #                                                       ~~ (c) SRW, 16 Jul 2014
 #                                                   ~~ last updated 30 Jan 2015
 
+require 'json'
+require 'sqlite3'
+
 module QM
 
     class SqliteApiStore
@@ -87,8 +90,6 @@ module QM
 
         def initialize(opts = {})
           # This constructor needs documentation.
-            require 'json'
-            require 'sqlite3'
             @settings = opts
         end
 

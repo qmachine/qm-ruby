@@ -4,6 +4,9 @@
 #                                                       ~~ (c) SRW, 16 Jul 2014
 #                                                   ~~ last updated 30 Jan 2015
 
+require 'json'
+require 'mongo'
+
 module QM
 
     class MongoApiStore
@@ -86,8 +89,6 @@ module QM
 
         def initialize(opts = {})
           # This constructor needs documentation.
-            require 'json'
-            require 'mongo'
             @settings = opts
         end
 
@@ -134,7 +135,6 @@ module QM
 
         def initialize(opts = {})
           # This constructor needs documentation.
-            require 'mongo'
             @settings = opts
         end
 
