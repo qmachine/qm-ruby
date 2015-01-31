@@ -45,6 +45,8 @@ Gem::Specification.new do |spec|
 
   # Specify dependencies
 
+    #spec.add_development_dependency('sqlite3', '1.3.10')
+
     spec.add_runtime_dependency('bson_ext', '1.12.0')   # requires C extension
     spec.add_runtime_dependency('json', '1.8.2')
     spec.add_runtime_dependency('httparty', '0.13.3')

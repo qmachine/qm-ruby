@@ -5,6 +5,7 @@
 #                                                   ~~ last updated 30 Jan 2015
 
 require 'qm/defs-mongo'
+require 'qm/defs-sqlite'
 require 'sinatra/base'
 
 module QM
@@ -15,6 +16,9 @@ module QM
           # This is the constructor.
             if opts.persistent_storage.has_key?(:mongo) then
                 @db = MongoApiStore.new(opts)
+            elsif opts.persistent_storage.has_key?(:sqlite) then
+                @db = SqliteApiStore.new(opts)
+            end
             @db.connect(opts.persistent_storage) unless @db.nil?
         end
 
