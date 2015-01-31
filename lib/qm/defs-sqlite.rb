@@ -19,12 +19,6 @@ module QM
             return
         end
 
-        def collect_garbage()
-          # This method needs documentation.
-            execute("DELETE FROM avars WHERE (exp_date < #{now})")
-            return
-        end
-
         def connect(opts = {})
           # This method needs documentation.
             if opts.has_key?(:sqlite) then
@@ -42,30 +36,6 @@ module QM
                 collect_garbage
             end
             return @filename
-        end
-
-        def execute(query)
-          # This helper method helps DRY out the code for database queries.
-            done = false
-            until (done == true) do
-                begin
-                    db = SQLite3::Database.open(@filename)
-                    x = db.execute(query)
-                    done = true
-                rescue SQLite3::Exception => err
-                    if (err.is_a?(SQLite3::BusyException) == false) then
-                        STDERR.puts "Exception occurred: '#{err}':\n#{query}"
-                    end
-                ensure
-                    db.close if db
-                end
-            end
-            return x
-        end
-
-        def exp_date()
-          # This method needs documentation.
-            return now + @settings.avar_ttl.to_i(10)
         end
 
         def get_avar(params)
@@ -103,11 +73,6 @@ module QM
             @settings = opts
         end
 
-        def now()
-          # This method needs documentation.
-            return Time.now.to_i(10)
-        end
-
         def set_avar(params)
           # This method needs documentation.
             body, box, key = params.last, params[0], params[1]
@@ -120,7 +85,42 @@ module QM
             return
         end
 
-        private :collect_garbage, :execute, :exp_date, :now
+        private
+
+        def collect_garbage()
+          # This method needs documentation.
+            execute("DELETE FROM avars WHERE (exp_date < #{now})")
+            return
+        end
+
+        def execute(query)
+          # This helper method helps DRY out the code for database queries.
+            done = false
+            until (done == true) do
+                begin
+                    db = SQLite3::Database.open(@filename)
+                    x = db.execute(query)
+                    done = true
+                rescue SQLite3::Exception => err
+                    if (err.is_a?(SQLite3::BusyException) == false) then
+                        STDERR.puts "Exception occurred: '#{err}':\n#{query}"
+                    end
+                ensure
+                    db.close if db
+                end
+            end
+            return x
+        end
+
+        def exp_date()
+          # This method needs documentation.
+            return now + @settings.avar_ttl.to_i
+        end
+
+        def now()
+          # This method needs documentation.
+            return Time.now.to_i
+        end
 
     end
 
