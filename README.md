@@ -8,14 +8,10 @@ The `qm` gem for [Ruby](http://www.ruby-lang.org/) includes a
 optionally log traffic data into a different MongoDB collection instead of
 logging to stdout. A client is also in development.
 
-Note that the original [SQLite](https://www.sqlite.org/) definitions are now
-only available in the
-[`sqlite3` branch](https://github.com/qmachine/qm-ruby/tree/sqlite3). This
-decision was motivated primarily by the
-[obstacle it poses](https://devcenter.heroku.com/articles/sqlite3)
-to deploying on [Heroku](https://www.heroku.com). If you are absolutely in love
-with SQLite (or just hate MongoDB), consider trying the
-[Node.js version](https://github.com/qmachine/qm-nodejs) instead.
+Note that [SQLite](https://www.sqlite.org/) definitions have been re-enabled as
+an experiment, but they may or may not wreak havoc when deploying to
+[Heroku](https://www.heroku.com), where it presents a number of
+[potential obstacles](https://devcenter.heroku.com/articles/sqlite3).
 
 For more information, please see the
 [manual](https://docs.qmachine.org/en/latest/ruby.html).
