@@ -2,7 +2,7 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 30 Jan 2015
+#                                                   ~~ last updated 31 Jan 2015
 
 module QM
 
@@ -59,8 +59,8 @@ module QM
             before_fork: lambda {|server, worker|
               # This needs documentation.
                 settings = server.app.settings
-                settings.api_db.close if not settings.api_db.nil?
-                settings.log_db.close if not settings.log_db.nil?
+                settings.api_db.close unless settings.api_db.nil?
+                settings.log_db.close unless settings.log_db.nil?
             },
             listeners: [
                 app.settings.hostname.to_s + ':' + app.settings.port.to_s
