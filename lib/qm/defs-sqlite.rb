@@ -46,12 +46,7 @@ module QM
         end
 
         def execute(query)
-          # This helper method helps DRY out the code for database queries, and
-          # it does so in an incredibly robust and inefficient way -- by
-          # creating the table and evicting expired rows before every single
-          # query. A caveat, of course, is that the special ":memory:" database
-          # doesn't work correctly, but ":memory:" isn't *persistent* storage
-          # anyway.
+          # This helper method helps DRY out the code for database queries.
             done = false
             until (done == true) do
                 begin
