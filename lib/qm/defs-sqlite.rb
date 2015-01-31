@@ -21,7 +21,6 @@ module QM
 
         def collect_garbage()
           # This method needs documentation.
-            now = (1000 * Time.now.to_f).to_i
             execute("DELETE FROM avars WHERE (exp_date < #{now})")
             return
         end
@@ -66,7 +65,7 @@ module QM
 
         def exp_date()
           # This method needs documentation.
-            return (1000 * (Time.now.to_f + @settings.avar_ttl)).to_i
+            return now + @settings.avar_ttl.to_i(10)
         end
 
         def get_avar(params)
@@ -106,7 +105,7 @@ module QM
 
         def now()
           # This method needs documentation.
-            return (1000 * Time.now.to_f).to_i
+            return Time.now.to_i(10)
         end
 
         def set_avar(params)
