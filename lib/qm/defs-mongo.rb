@@ -2,7 +2,7 @@
 
 #-  defs-mongo.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 30 Jan 2015
+#                                                   ~~ last updated 31 Jan 2015
 
 require 'json'
 require 'mongo'
@@ -45,6 +45,9 @@ module QM
                 },
                 query: {
                     box: params[0],
+                    exp_date: {
+                        '$gt': Time.now
+                    },
                     key: params[1]
                 },
                 update: {
