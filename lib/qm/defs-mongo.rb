@@ -30,6 +30,7 @@ module QM
                 @db.collection('avars').ensure_index('exp_date', {
                     expireAfterSeconds: 0
                 })
+                STDOUT.puts 'API: MongoDB storage is ready.'
             end
             return @db
         end
@@ -132,6 +133,7 @@ module QM
           # This method needs documentation.
             if (opts.has_key?(:mongo)) then
                 @db ||= Mongo::MongoClient.from_uri(opts[:mongo]).db
+                STDOUT.puts 'LOG: MongoDB storage is ready.'
             end
             return @db
         end
