@@ -21,21 +21,21 @@ module QM
           # This method needs documentation.
             if opts.has_key?(:redis) then
                 @db ||= Redis.new({url: opts[:redis]})
+                STDOUT.puts 'API: Redis storage is ready.'
             end
             return @db
         end
 
         def get_avar(params)
           # This method needs documentation.
-            hash_key = "#{params[0]}&#{params[1]}"
-            y = @db.hget(hash_key, 'body')
-            @db.expire(hash_key, @settings.avar_ttl.to_i) if y
+            y = @db.hget(params.join('&'), 'body')
+            @db.expire(params.join('&'), @settings.avar_ttl.to_i) if y
             return (y.nil?) ? '{}' : y
         end
 
         def get_list(params)
           # This method needs documentation.
-            y = @db.smembers("$:#{params[0]}&#{params[1]}")
+            y = @db.smembers('$:' + params.join('&'))
             return (y.nil?) ? '[]' : y.to_json
         end
 
@@ -47,7 +47,7 @@ module QM
         def set_avar(params)
           # This method needs documentation.
             body, box, key = params.last, params[0], params[1]
-            hash_key = "#{box}&#{key}"
+            hash_key = box + '&' + key
             status_prev = @db.hget(hash_key, 'status')
             @db.multi do |multi|
                 multi.srem('$:' + box + '&' + status_prev, key) if status_prev
