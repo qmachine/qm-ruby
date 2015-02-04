@@ -22,7 +22,8 @@ module QM
             if opts.has_key?(:redis) then
               # Try to use the "hiredis" driver to boost performance, and fall
               # back to a non-native driver. This is the same strategy that the
-              # Node.js version uses.
+              # Node.js version uses. There is also a nifty way to accomplish
+              # the same thing from the Gemfile alone (http://git.io/bZb1).
                 begin
                     @db ||= Redis.new({
                         driver: 'hiredis'.to_sym,
