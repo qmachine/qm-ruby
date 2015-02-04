@@ -11,6 +11,8 @@ module QM
 
     class RedisApiStore
 
+      # NOTE: These definitions do not collect garbage yet.
+
         def close()
           # This method documentation.
             @db.quit if defined?(@db)
@@ -37,6 +39,7 @@ module QM
                         url: opts[:redis]
                     })
                 end
+                collect_garbage
                 STDOUT.puts 'API: Redis storage is ready.'
             end
             return @db
@@ -76,6 +79,14 @@ module QM
                 end
                 multi.expire(hash_key, @settings.avar_ttl.to_i)
             end
+            return
+        end
+
+        private
+
+        def collect_garbage()
+          # This method is not implemented yet.
+            # ...
             return
         end
 
