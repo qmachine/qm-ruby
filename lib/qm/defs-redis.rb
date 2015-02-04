@@ -11,8 +11,6 @@ module QM
 
     class RedisApiStore
 
-      # NOTE: These definitions do not collect garbage yet.
-
         def close()
           # This method documentation.
             @db.quit if defined?(@db)
@@ -47,6 +45,7 @@ module QM
 
         def get_avar(params)
           # This method needs documentation.
+            collect_garbage
             y = @db.hget(params.join('&'), 'body')
             @db.expire(params.join('&'), @settings.avar_ttl.to_i) if y
             return (y.nil?) ? '{}' : y
@@ -54,6 +53,7 @@ module QM
 
         def get_list(params)
           # This method needs documentation.
+            collect_garbage
             y = @db.smembers('$:' + params.join('&'))
             return (y.nil?) ? '[]' : y.to_json
         end
@@ -65,6 +65,7 @@ module QM
 
         def set_avar(params)
           # This method needs documentation.
+            collect_garbage
             body, box, key = params.last, params[0], params[1]
             hash_key = box + '&' + key
             status_prev = @db.hget(hash_key, 'status')
@@ -85,8 +86,17 @@ module QM
         private
 
         def collect_garbage()
-          # This method is not implemented yet.
-            # ...
+          # This method needs documentation.
+            return if defined?(@last_gc_date) and
+                    ((Time.now - @last_gc_date) < @settings.gc_interval)
+            @last_gc_date = Time.now
+            @db.keys('$:*').each do |queue|
+                box = queue.gsub(/^\$\:([\w\-]+)[&][\w\-]+/, "$1") { $1 }
+                @db.smembers(queue).each do |key|
+                    @db.srem(queue, key) unless @db.exists(box + '&' + key)
+                end
+            end
+            STDOUT.puts 'Finished collecting garbage.'
             return
         end
 

@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 30 Jan 2015
+#                                                   ~~ last updated 04 Feb 2015
 
 require 'qm/storage'
 require 'sinatra/base'
@@ -47,12 +47,13 @@ module QM
             }
 
             qm_options = {
-                avar_ttl:           86400, # seconds (24 * 60 * 60 = 1 day)
+                avar_ttl:           86400,  # seconds (24 * 60 * 60 = 1 day)
                 enable_api_server:  false,
                 enable_cors:        false,
                 enable_web_server:  false,
+                gc_interval:        60,     # seconds
                 hostname:           '0.0.0.0',
-                max_body_size:      65536, # bytes (64 * 1024 = 64 KB)
+                max_body_size:      65536,  # bytes (64 * 1024 = 64 KB)
                 persistent_storage: {},
                 port:               8177,
                 public_folder:      'public',

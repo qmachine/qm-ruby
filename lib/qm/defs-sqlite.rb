@@ -2,7 +2,7 @@
 
 #-  defs-sqlite.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 31 Jan 2015
+#                                                   ~~ last updated 04 Feb 2015
 
 require 'json'
 require 'sqlite3'
@@ -39,6 +39,7 @@ module QM
 
         def get_avar(params)
           # This method needs documentation.
+            collect_garbage
             box, key = params[0], params[1]
             x = execute <<-sql
                 SELECT body FROM avars
@@ -59,6 +60,7 @@ module QM
 
         def get_list(params)
           # This method needs documentation.
+            collect_garbage
             b, s = params[0], params[1]
             x = execute <<-sql
                 SELECT key FROM avars
@@ -74,13 +76,13 @@ module QM
 
         def set_avar(params)
           # This method needs documentation.
+            collect_garbage
             body, box, key = params.last, params[0], params[1]
             status = (params.length == 4) ? "'#{params[2]}'" : 'NULL'
             execute <<-sql
                 INSERT OR REPLACE INTO avars (body, box, exp_date, key, status)
                 VALUES ('#{body}', '#{box}', #{exp_date}, '#{key}', #{status})
                 sql
-            collect_garbage
             return
         end
 
@@ -88,7 +90,11 @@ module QM
 
         def collect_garbage()
           # This method needs documentation.
+            return if defined?(@last_gc_date) and
+                    ((Time.now - @last_gc_date) < @settings.gc_interval)
+            @last_gc_date = Time.now
             execute("DELETE FROM avars WHERE (exp_date < #{now})")
+            STDOUT.puts 'Finished collecting garbage.'
             return
         end
 
