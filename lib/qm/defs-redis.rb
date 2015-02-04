@@ -13,7 +13,7 @@ module QM
 
         def close()
           # This method documentation.
-            @db.quit if @db.respond_to?('quit')
+            @db.quit if defined?(@db)
             return
         end
 
