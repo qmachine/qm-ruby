@@ -2,7 +2,7 @@
 
 #-  defs-redis.rb ~~
 #                                                       ~~ (c) SRW, 03 Feb 2015
-#                                                   ~~ last updated 03 Feb 2015
+#                                                   ~~ last updated 04 Feb 2015
 
 require 'json'
 require 'redis'
@@ -20,7 +20,22 @@ module QM
         def connect(opts = {})
           # This method needs documentation.
             if opts.has_key?(:redis) then
-                @db ||= Redis.new({url: opts[:redis]})
+              # Try to use the "hiredis" driver to boost performance, and fall
+              # back to a non-native driver. This is the same strategy that the
+              # Node.js version uses.
+                begin
+                    @db ||= Redis.new({
+                        driver: 'hiredis'.to_sym,
+                        url: opts[:redis]
+                    })
+                rescue RuntimeError
+                  # The  "hiredis" driver was not available, either because the
+                  # gem was not included in the app's Gemfile or else because
+                  # this Ruby engine cannot use native C extensions.
+                    @db ||= Redis.new({
+                        url: opts[:redis]
+                    })
+                end
                 STDOUT.puts 'API: Redis storage is ready.'
             end
             return @db
