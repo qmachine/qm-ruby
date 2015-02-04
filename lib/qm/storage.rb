@@ -2,7 +2,7 @@
 
 #-  storage.rb ~~
 #                                                       ~~ (c) SRW, 27 Jan 2015
-#                                                   ~~ last updated 31 Jan 2015
+#                                                   ~~ last updated 03 Feb 2015
 
 require 'sinatra/base'
 
@@ -18,6 +18,9 @@ module QM
             elsif opts.persistent_storage.has_key?(:postgres) then
                 require 'qm/defs-postgres'
                 @db = PostgresApiStore.new(opts)
+            elsif opts.persistent_storage.has_key?(:redis) then
+                require 'qm/defs-redis'
+                @db = RedisApiStore.new(opts)
             elsif opts.persistent_storage.has_key?(:sqlite) then
                 require 'qm/defs-sqlite'
                 @db = SqliteApiStore.new(opts)
