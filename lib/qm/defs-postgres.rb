@@ -2,11 +2,10 @@
 
 #-  defs-postgres.rb ~~
 #                                                       ~~ (c) SRW, 31 Jan 2015
-#                                                   ~~ last updated 04 Feb 2015
+#                                                   ~~ last updated 05 Feb 2015
 
 require 'json'
 require 'pg'
-require 'pg_hstore'
 require 'uri'
 
 module QM
@@ -200,10 +199,10 @@ module QM
                 @conn_opts ||= temp
                 @db ||= PG::Connection.open(@conn_opts)
                 execute <<-end
-                    CREATE EXTENSION IF NOT EXISTS hstore;
+                    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
                     CREATE TABLE IF NOT EXISTS traffic (
-                        id serial PRIMARY KEY,
-                        doc hstore
+                        id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+                        doc json NOT NULL
                     );
                 end
                 STDOUT.puts 'LOG: PostgreSQL storage is ready.'
@@ -218,7 +217,7 @@ module QM
 
         def log(doc = {})
           # This method inserts a new entry into Postgres after each request.
-            execute("INSERT INTO traffic (doc) VALUES (#{PgHstore.dump(doc)})")
+            execute("INSERT INTO traffic (doc) VALUES ('#{doc.to_json}')")
             return
         end
 
