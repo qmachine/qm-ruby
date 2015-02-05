@@ -42,6 +42,9 @@ module QM
             if opts.trafficlog_storage.has_key?(:mongo) then
                 require 'qm/defs-mongo'
                 @db = MongoLogStore.new(opts)
+            elsif opts.trafficlog_storage.has_key?(:postgres) then
+                require 'qm/defs-postgres'
+                @db = PostgresLogStore.new(opts)
             end
             @db.connect(opts.trafficlog_storage) if defined?(@db)
         end

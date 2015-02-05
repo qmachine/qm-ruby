@@ -2,10 +2,11 @@
 
 #-  defs-postgres.rb ~~
 #                                                       ~~ (c) SRW, 31 Jan 2015
-#                                                   ~~ last updated 31 Jan 2015
+#                                                   ~~ last updated 04 Feb 2015
 
 require 'json'
 require 'pg'
+require 'pg_hstore'
 require 'uri'
 
 module QM
@@ -162,6 +163,7 @@ module QM
             begin
                 y = (x.length > 0) ? @db.exec_params(query, x) : @db.exec(query)
             rescue PG::ConnectionBad
+              # This is expected to occur once per worker because of forking.
                 STDERR.puts 'Reconnecting ...'
                 @db = PG::Connection.open(@conn_opts)
                 return execute(query, x)
@@ -173,7 +175,71 @@ module QM
 
     end
 
-  # NOTE: There is no `PostgresLogStore` class yet.
+    class PostgresLogStore
+
+        def close()
+          # This method documentation.
+            begin
+                @db.close if @db.respond_to?('close')
+            rescue
+            end
+            return
+        end
+
+        def connect(opts = {})
+          # This method needs documentation.
+            if opts.has_key?(:postgres) then
+                parsed = URI.parse(opts[:postgres])
+                temp = {
+                    dbname: parsed.path.gsub('/', ''),
+                    host: parsed.host,
+                    port: parsed.port.to_i
+                }
+                temp[:user] = parsed.user unless parsed.user.nil?
+                temp[:password] = parsed.password unless parsed.password.nil?
+                @conn_opts ||= temp
+                @db ||= PG::Connection.open(@conn_opts)
+                execute <<-end
+                    CREATE EXTENSION IF NOT EXISTS hstore;
+                    CREATE TABLE IF NOT EXISTS traffic (
+                        id serial PRIMARY KEY,
+                        doc hstore
+                    );
+                end
+                STDOUT.puts 'LOG: PostgreSQL storage is ready.'
+            end
+            return @db
+        end
+
+        def initialize(opts = {})
+          # This constructor needs documentation.
+            @settings = opts
+        end
+
+        def log(doc = {})
+          # This method inserts a new entry into Postgres after each request.
+            execute("INSERT INTO traffic (doc) VALUES (#{PgHstore.dump(doc)})")
+            return
+        end
+
+        private
+
+        def execute(query)
+          # This method needs documentation.
+            begin
+                y = @db.exec(query)
+            rescue PG::ConnectionBad
+              # This is expected to occur once per worker because of forking.
+                STDERR.puts 'Reconnecting ...'
+                @db = PG::Connection.open(@conn_opts)
+                return execute(query)
+            rescue PG::Error => err
+                STDERR.puts "Exception occurred: '#{err}':\n#{query}"
+            end
+            return y
+        end
+
+    end
 
 end
 
