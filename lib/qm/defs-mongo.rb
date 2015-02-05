@@ -2,7 +2,7 @@
 
 #-  defs-mongo.rb ~~
 #                                                       ~~ (c) SRW, 16 Jul 2014
-#                                                   ~~ last updated 31 Jan 2015
+#                                                   ~~ last updated 04 Feb 2015
 
 require 'json'
 require 'mongo'
@@ -143,16 +143,9 @@ module QM
             @settings = opts
         end
 
-        def log(request)
+        def log(doc = {})
           # This method inserts a new document into MongoDB after each request.
-          # Eventually, this function will be replaced by one that delegates to
-          # a custom `log` function like the Node.js version.
-            @db.collection('traffic').insert({
-                host:           request.host,
-                method:         request.request_method,
-                timestamp:      Time.now,
-                url:            request.fullpath
-            }, {
+            @db.collection('traffic').insert(doc, {
                 w: 0
             })
             return

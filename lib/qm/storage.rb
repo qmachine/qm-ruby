@@ -2,7 +2,7 @@
 
 #-  storage.rb ~~
 #                                                       ~~ (c) SRW, 27 Jan 2015
-#                                                   ~~ last updated 03 Feb 2015
+#                                                   ~~ last updated 04 Feb 2015
 
 require 'sinatra/base'
 
@@ -44,6 +44,17 @@ module QM
                 @db = MongoLogStore.new(opts)
             end
             @db.connect(opts.trafficlog_storage) if defined?(@db)
+        end
+
+        def log(request = {})
+          # This method needs documentation.
+            @db.log({
+                host:       request.host,
+                method:     request.request_method,
+                timestamp:  Time.now,
+                url:        request.fullpath
+            })
+            return
         end
 
         def method_missing(method, *args, &block)
