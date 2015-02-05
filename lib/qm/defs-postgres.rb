@@ -201,8 +201,8 @@ module QM
                 execute <<-end
                     CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
                     CREATE TABLE IF NOT EXISTS traffic (
-                        id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-                        doc json NOT NULL
+                        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                        doc JSON NOT NULL
                     );
                 end
                 STDOUT.puts 'LOG: PostgreSQL storage is ready.'
