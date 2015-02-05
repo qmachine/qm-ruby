@@ -2,23 +2,21 @@
 
 #-  client-demo.rb ~~
 #                                                       ~~ (c) SRW, 17 Nov 2014
-#                                                   ~~ last updated 17 Nov 2014
+#                                                   ~~ last updated 05 Feb 2015
 
 require 'rubygems'
-require 'qm'
+require 'qm/client'
 
-qm = QM::launch_client()
+qm = QM::Client.new(mothership: 'http://localhost:8177')
 
-temp_key = qm.uuid()
+temp_key = qm.uuid
 
-qm.set_avar({box: 'test-from-ruby', key: temp_key, val: rand})
+qm.set_avar(box: 'test-from-ruby', key: temp_key, val: rand)
 
-jobs = qm.get_list({box: 'test-from-ruby', status: 'waiting'})
+jobs = qm.get_list(box: 'test-from-ruby', status: 'waiting')
 
 puts "Number of jobs: #{jobs.length}"
 
-y = qm.get_avar({box: 'test-from-ruby', key: temp_key})
-
-puts y
+puts qm.get_avar(box: 'test-from-ruby', key: temp_key)
 
 #-  vim:set syntax=ruby:

@@ -7,7 +7,7 @@
 #   be convenient. They are modeled after the browser (JS) and R clients.
 #
 #   One idea for the future is to embed one JS execution context in each
-#   `QMachineClient` object and then to load the latest browser client inside.
+#   `Client` object and then to load the latest browser client inside.
 #   Obviously, that won't coordinate *arbitrary* code -- or even Ruby code --
 #   but it will save me from rewriting a client completely from scratch because
 #   it is possible to add functions and objects to the JS context which are
@@ -16,19 +16,19 @@
 #   I can reuse the browser client ...
 #
 #                                                       ~~ (c) SRW, 20 Jul 2014
-#                                                   ~~ last updated 30 Jan 2015
+#                                                   ~~ last updated 05 Feb 2015
 
 require 'httparty'
 require 'json'
 
 module QM
 
-    class QMachineClient
+    class Client
 
         include HTTParty
 
         def initialize(options = {mothership: 'https://api.qmachine.org'})
-          # This method runs when Ruby calls `QMachineClient.new`.
+          # This method runs when Ruby calls `Client.new`.
             @ms = options[:mothership]
             return
         end

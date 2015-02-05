@@ -16,7 +16,7 @@
 #   of a 'box', 'key', or 'status' value.
 #
 #                                                       ~~ (c) SRW, 24 Apr 2013
-#                                                   ~~ last updated 04 Feb 2015
+#                                                   ~~ last updated 05 Feb 2015
 
 require 'qm/storage'
 require 'sinatra/base'
@@ -24,7 +24,7 @@ require 'sinatra/cross_origin'
 
 module QM
 
-    class QMachineService < Sinatra::Base
+    class Service < Sinatra::Base
 
         register Sinatra::CrossOrigin, QM::StorageConnectors
 

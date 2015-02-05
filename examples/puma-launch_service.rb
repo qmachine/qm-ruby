@@ -2,7 +2,7 @@
 
 #-  puma-launch_service.rb ~~
 #                                                       ~~ (c) SRW, 26 Jan 2015
-#                                                   ~~ last updated 26 Jan 2015
+#                                                   ~~ last updated 05 Feb 2015
 
 module QM
 
@@ -13,7 +13,7 @@ module QM
       # for this "teaching version" anyway. Puma will teach *me* a lot about
       # concurrency in the meantime :-)
         require 'puma'
-        app = QM::create_app(options)
+        app = create_app(options)
         server = Puma::Server.new(app)
         server.add_tcp_listener(app.settings.hostname, app.settings.port)
         server.min_threads = 1

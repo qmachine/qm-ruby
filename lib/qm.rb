@@ -2,7 +2,7 @@
 
 #-  qm.rb ~~
 #                                                       ~~ (c) SRW, 12 Apr 2013
-#                                                   ~~ last updated 31 Jan 2015
+#                                                   ~~ last updated 05 Feb 2015
 
 module QM
 
@@ -11,9 +11,9 @@ module QM
     def create_app(options = {})
       # This function creates and configures a fresh app. This code is separate
       # from the `launch_service` method's code to allow direct use of a
-      # `QMachineService` instance from within a Rackup file ("config.ru").
+      # `QM::Service` instance from within a Rackup file ("config.ru").
         require 'qm/service'
-        app = Sinatra.new(QMachineService) do
+        app = Sinatra.new(Service) do
             configure do
                 convert = lambda do |x|
                   # This converts all keys in a hash to symbols recursively.
@@ -33,7 +33,7 @@ module QM
                     end
                 end
                 settings.qm_lazy.each do |key|
-                  # Eagerly evaluate the lambdas in `QMachineService` in the
+                  # Eagerly evaluate the lambdas in the `Service` class in the
                   # correct scope and store their outputs. This strategy avoids
                   # re-evaluating them for every HTTP request later, of course,
                   # but the main motivation is to avoid endlessly opening new
@@ -48,7 +48,7 @@ module QM
     def launch_client(options = {mothership: 'https://api.qmachine.org'})
       # This function needs documentation.
         require 'qm/client'
-        return QMachineClient.new(options)
+        return Client.new(options)
     end
 
     def launch_service(options = {})
