@@ -1,8 +1,11 @@
 #-  Ruby source code
 
 #-  defs-mysql.rb ~~
+#
+#   NOTE: This implementation is not even complete enough to unit-test.
+#
 #                                                       ~~ (c) SRW, 05 Feb 2015
-#                                                   ~~ last updated 05 Feb 2015
+#                                                   ~~ last updated 06 Feb 2015
 
 require 'json'
 require 'mysql2'
