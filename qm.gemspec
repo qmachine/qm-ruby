@@ -52,6 +52,7 @@ Gem::Specification.new do |spec|
     spec.add_runtime_dependency('json', '1.8.2')
     spec.add_runtime_dependency('httparty', '0.13.3')
     spec.add_runtime_dependency('mongo', '1.12.0')
+    spec.add_runtime_dependency('mysql2', '0.3.17')     # requires C extension
     spec.add_runtime_dependency('pg', '0.18.1')
     spec.add_runtime_dependency('redis', '3.2.0')
     spec.add_runtime_dependency('sinatra', '1.4.5')

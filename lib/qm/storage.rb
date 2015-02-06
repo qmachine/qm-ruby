@@ -2,7 +2,7 @@
 
 #-  storage.rb ~~
 #                                                       ~~ (c) SRW, 27 Jan 2015
-#                                                   ~~ last updated 04 Feb 2015
+#                                                   ~~ last updated 05 Feb 2015
 
 require 'sinatra/base'
 
@@ -15,6 +15,9 @@ module QM
             if opts.persistent_storage.has_key?(:mongo) then
                 require 'qm/defs-mongo'
                 @db = MongoApiStore.new(opts)
+            elsif opts.persistent_storage.has_key?(:mysql) then
+                require 'qm/defs-mysql'
+                @db = MysqlApiStore.new(opts)
             elsif opts.persistent_storage.has_key?(:postgres) then
                 require 'qm/defs-postgres'
                 @db = PostgresApiStore.new(opts)
